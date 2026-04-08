@@ -1,0 +1,5740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🎯 轩琅型号记忆训练 v2</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bd:#30363d;--bd2:#3a4149;
+  --tx:#e6edf3;--tx2:#8b949e;--tx3:#484f58;
+  --bl:#58a6ff;--gr:#3fb950;--am:#d29922;--rd:#f85149;--pu:#bc8cff;--te:#39d353;--or:#f0883e;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+.hd{background:var(--bg2);border-bottom:1px solid var(--bd);padding:13px 20px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.hd h1{font-size:16px;font-weight:700}
+.sts{display:flex;gap:14px}
+.st{text-align:center}
+.sv{font-size:17px;font-weight:700;color:var(--bl)}
+.sl{font-size:10px;color:var(--tx3);margin-top:1px}
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--bd);padding:0 20px;overflow-x:auto}
+.tab{padding:10px 16px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;
+  color:var(--tx2);border:none;background:transparent;font-family:inherit;white-space:nowrap;transition:all .12s}
+.tab.on{color:var(--bl);border-bottom-color:var(--bl);font-weight:500}
+.tab:hover:not(.on){color:var(--tx);border-bottom-color:var(--bd)}
+.ctrl{padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--bd);
+  display:none;gap:8px;align-items:center;flex-wrap:wrap}
+.ctrl.on{display:flex}
+select,input[type=text]{background:var(--bg3);border:1px solid var(--bd);border-radius:6px;
+  color:var(--tx);padding:6px 10px;font-size:13px;outline:none;font-family:inherit}
+select:focus,input[type=text]:focus{border-color:var(--bl)}
+.btn{padding:6px 13px;border-radius:6px;border:none;cursor:pointer;font-size:13px;
+  font-weight:500;display:inline-flex;align-items:center;gap:5px;transition:all .12s;font-family:inherit}
+.btn:hover{opacity:.82;transform:translateY(-1px)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.bp{background:var(--bl);color:#0d1117}
+.bs{background:var(--bg3);color:var(--tx);border:1px solid var(--bd)}
+.bg{background:var(--gr);color:#0d1117}
+.ba{background:var(--am);color:#0d1117}
+.br{background:var(--rd);color:#fff}
+.bv{background:var(--pu);color:#fff}
+.bsm{padding:4px 9px;font-size:12px}
+.pg{display:none;padding:20px;max-width:860px;margin:0 auto}
+.pg.on{display:block}
+/* Quiz */
+.qw{max-width:640px;margin:0 auto}
+.qm{font-size:12px;color:var(--tx2);display:flex;justify-content:space-between;margin-bottom:12px}
+.qpb{height:3px;background:var(--bd);border-radius:2px;margin-bottom:18px;overflow:hidden}
+.qpf{height:100%;background:linear-gradient(90deg,var(--bl),var(--pu));border-radius:2px;transition:width .3s}
+.qc{background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:24px;margin-bottom:16px}
+.qbdg{font-size:10px;padding:2px 7px;border-radius:20px;background:rgba(88,166,255,.15);color:var(--bl);display:inline-block;margin-bottom:10px}
+.qmod{font-size:28px;font-weight:700;letter-spacing:1px;margin:6px 0 4px;color:var(--tx)}
+.qhint{font-size:11px;color:var(--tx3)}
+.qqt{font-size:14px;color:var(--tx2);margin:14px 0 18px;line-height:1.5}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.opt{background:var(--bg3);border:1px solid var(--bd);border-radius:7px;padding:13px 14px;
+  cursor:pointer;font-size:13px;text-align:left;color:var(--tx);transition:all .12s;
+  font-family:inherit;line-height:1.4;position:relative}
+.opt:hover:not(:disabled){border-color:var(--bl);background:rgba(88,166,255,.08);transform:translateY(-1px)}
+.opt:disabled{cursor:not-allowed}
+.opt.ok{border-color:var(--gr)!important;background:rgba(63,185,80,.12)!important;color:var(--gr)}
+.opt.ng{border-color:var(--rd)!important;background:rgba(248,81,73,.1)!important;color:var(--rd)}
+.opt.sa{border-color:var(--gr)!important;background:rgba(63,185,80,.06)!important}
+.om{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:14px}
+.rb{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:7px;margin-top:14px}
+.rb.ok{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3)}
+.rb.ng{background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.25)}
+.ri{font-size:20px}
+.rt{flex:1;font-size:13px;line-height:1.6}
+.rd2{font-size:11px;color:var(--tx2);margin-top:2px}
+.qnav{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+/* Fill blank */
+.fb-wrap{margin:14px 0 18px}
+.fb-input{width:100%;padding:12px 14px;font-size:18px;font-weight:600;letter-spacing:1px;
+  background:var(--bg3);border:2px solid var(--bd);border-radius:8px;color:var(--tx);
+  outline:none;text-align:center;font-family:inherit;transition:border .15s}
+.fb-input:focus{border-color:var(--bl)}
+.fb-input.ok{border-color:var(--gr)!important;color:var(--gr)}
+.fb-input.ng{border-color:var(--rd)!important;color:var(--rd)}
+.fb-hint{font-size:11px;color:var(--tx3);text-align:center;margin-top:5px}
+/* Study card */
+.cf{perspective:1000px;width:100%;max-width:560px;margin:0 auto 16px;height:180px;cursor:pointer}
+.ci{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.cf.fl .ci{transform:rotateY(180deg)}
+.cface{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--bg2);border:1px solid var(--bd);padding:20px}
+.cbk{transform:rotateY(180deg);background:var(--bg3)}
+.cmod{font-size:36px;font-weight:700;color:var(--bl);letter-spacing:2px}
+.cq{font-size:12px;color:var(--tx3);margin-top:6px}
+.cans{font-size:26px;font-weight:600;color:var(--gr)}
+.csub{font-size:12px;color:var(--tx2);margin-top:6px;text-align:center}
+.sdots{display:flex;gap:3px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--bd);cursor:pointer;transition:all .12s}
+.dot.cur{background:var(--bl);transform:scale(1.4)}
+.dot.ok{background:var(--gr)}.dot.ng{background:var(--rd)}
+/* Table */
+.tbw{overflow-x:auto;border-radius:8px;border:1px solid var(--bd);max-height:calc(100vh - 280px)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead{background:var(--bg3)}
+th{padding:9px 12px;text-align:left;color:var(--tx2);font-weight:500;border-bottom:1px solid var(--bd);
+  position:sticky;top:0;background:var(--bg3);white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:var(--tx)}
+td{padding:8px 12px;border-bottom:1px solid rgba(48,54,61,.4);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.cm{font-weight:600;color:var(--bl)}
+.ck{font-size:11px;color:var(--pu)}
+.cc{color:var(--gr)}
+.co{font-size:11px;color:var(--am)}
+/* Score */
+.sc-wrap{text-align:center;padding:32px 16px}
+.sc-circle{width:130px;height:130px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative}
+.sc-inner{width:102px;height:102px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.sc-pct{font-size:26px;font-weight:700}.sc-lbl{font-size:10px;color:var(--tx3)}
+.wl{text-align:left;max-height:320px;overflow-y:auto;margin-top:14px}
+.wi{background:var(--bg3);border:1px solid var(--bd);border-radius:7px;padding:9px 12px;margin-bottom:7px}
+.wm{font-size:14px;font-weight:700;color:var(--rd);margin-bottom:3px}
+.wd{font-size:11px;color:var(--tx2);line-height:1.6}
+/* Stats */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.sc2{background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px;text-align:center}
+.sn{font-size:20px;font-weight:700;color:var(--bl)}.sl2{font-size:10px;color:var(--tx3);margin-top:2px}
+/* Toast */
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:var(--bg2);border:1px solid var(--bd);border-radius:7px;padding:9px 18px;
+  font-size:13px;z-index:99;opacity:0;transition:all .22s;pointer-events:none;
+  box-shadow:0 6px 20px rgba(0,0,0,.4)}
+#toast.show{transform:translateX(-50%);opacity:1}
+#toast.ok{border-color:var(--gr);color:var(--gr)}
+#toast.er{border-color:var(--rd);color:var(--rd)}
+hr{border:none;border-top:1px solid var(--bd);margin:12px 0}
+.cn{font-size:11px;color:var(--tx3);margin-bottom:8px}
+@media(max-width:580px){.opts{grid-template-columns:1fr}.sg{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div class="hd">
+  <h1>🎯 轩琅型号记忆训练系统 v2</h1>
+  <div class="sts">
+    <div class="st"><div class="sv" id="hd0">625</div><div class="sl">总型号</div></div>
+    <div class="st"><div class="sv" id="hd1" style="color:var(--gr)">-</div><div class="sl">正确率</div></div>
+    <div class="st"><div class="sv" id="hd2" style="color:var(--am)">0</div><div class="sl">连击</div></div>
+    <div class="st"><div class="sv" id="hd3" style="color:var(--pu)">0</div><div class="sl">错题库</div></div>
+  </div>
+</div>
+<div class="tabs">
+  <button class="tab on" onclick="sw('quiz',this)">📝 选择题</button>
+  <button class="tab" onclick="sw('fill',this)">✏️ 填空题</button>
+  <button class="tab" onclick="sw('study',this)">🃏 记忆卡片</button>
+  <button class="tab" onclick="sw('browse',this)">📋 型号速查</button>
+  <button class="tab" onclick="sw('stats',this)">📊 我的记录</button>
+</div>
+
+<!-- 选择题控制栏 -->
+<div class="ctrl on" id="ctrl-quiz">
+  <select id="qsf" onchange="resetQ()"><option value="all">全部系列</option></select>
+  <select id="qtp" onchange="resetQ()">
+    <option value="color">型号→颜色</option>
+    <option value="ouke">型号→欧克型号</option>
+    <option value="series">型号→系列</option>
+    <option value="model">颜色→轩琅型号</option>
+    <option value="mix">随机混合</option>
+  </select>
+  <label style="font-size:12px;color:var(--tx2);display:flex;align-items:center;gap:4px">
+    <input type="checkbox" id="qerr" style="cursor:pointer"> 只练错题库
+  </label>
+  <button class="btn bp" onclick="startQ()">▶ 开始</button>
+  <button class="btn bs bsm" onclick="resetQ()">重置</button>
+</div>
+
+<!-- 填空题控制栏 -->
+<div class="ctrl" id="ctrl-fill">
+  <select id="fsf" onchange="resetF()"><option value="all">全部系列</option></select>
+  <select id="ftp">
+    <option value="color">型号→填写颜色</option>
+    <option value="ouke">型号→填写欧克型号</option>
+    <option value="model">欧克型号→填写轩琅型号</option>
+  </select>
+  <label style="font-size:12px;color:var(--tx2);display:flex;align-items:center;gap:4px">
+    <input type="checkbox" id="ferr" style="cursor:pointer"> 只练错题库
+  </label>
+  <button class="btn bp" onclick="startF()">▶ 开始</button>
+  <button class="btn bs bsm" onclick="resetF()">重置</button>
+</div>
+
+<!-- 记忆卡片控制栏 -->
+<div class="ctrl" id="ctrl-study">
+  <select id="ssf" onchange="initS()"><option value="all">全部系列</option></select>
+  <select id="sshow">
+    <option value="color">背面:颜色</option>
+    <option value="ouke">背面:欧克型号</option>
+    <option value="both">背面:颜色+欧克</option>
+  </select>
+  <button class="btn bp" onclick="initS()">🔄 重新开始</button>
+  <button class="btn bs bsm" onclick="()=>{sPool=shuffle([...sPool]);sIdx=0;renderS()}">🔀 打乱</button>
+</div>
+
+<!-- 型号速查控制栏 -->
+<div class="ctrl" id="ctrl-browse">
+  <input type="text" id="bq" placeholder="搜索轩琅/欧克型号/颜色/系列..." oninput="renderB()" style="width:260px">
+  <select id="bsf" onchange="renderB()"><option value="all">全部系列</option></select>
+  <button class="btn bs bsm" onclick="exportCSV()">⬇ 导出CSV</button>
+</div>
+
+<!-- 我的记录控制栏 -->
+<div class="ctrl" id="ctrl-stats">
+  <button class="btn br bsm" onclick="if(confirm('确定清空全部记录？')){hist={};ss={};errBank={};saveLS();renderST();upHd();toast('记录已清空','ok')}">🗑 清空记录</button>
+  <button class="btn ba bsm" onclick="exportErrors()">⬇ 导出错题</button>
+</div>
+
+<!-- ① 选择题 -->
+<div id="pg-quiz" class="pg on">
+  <div class="qw">
+    <div class="qm"><span id="qnum">题目 0/0</span><span id="qsm" style="color:var(--gr)"></span></div>
+    <div class="qpb"><div class="qpf" id="qpf" style="width:0%"></div></div>
+    <div id="qmain">
+      <div style="text-align:center;padding:50px 16px;color:var(--tx3)">
+        <div style="font-size:32px;margin-bottom:10px">🎯</div>
+        <div>选择系列和题型，点击「开始」</div>
+        <div style="font-size:11px;margin-top:6px">共 625 个型号 · 25 个系列</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ② 填空题 -->
+<div id="pg-fill" class="pg">
+  <div class="qw">
+    <div class="qm"><span id="fnum">题目 0/0</span><span id="fsm" style="color:var(--gr)"></span></div>
+    <div class="qpb"><div class="qpf" id="fpf" style="width:0%"></div></div>
+    <div id="fmain">
+      <div style="text-align:center;padding:50px 16px;color:var(--tx3)">
+        <div style="font-size:32px;margin-bottom:10px">✏️</div>
+        <div>选择系列和题型，点击「开始」</div>
+        <div style="font-size:11px;margin-top:6px">答错自动进入错题库，可反复练习</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ③ 记忆卡片 -->
+<div id="pg-study" class="pg">
+  <div style="max-width:600px;margin:0 auto">
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--tx2);margin-bottom:10px" id="sinfo"></div>
+    <div class="cf" id="fc" onclick="flipC()">
+      <div class="ci">
+        <div class="cface">
+          <div class="cq" id="fcq">点击翻转查看答案</div>
+          <div class="cmod" id="fcm">-</div>
+          <div style="font-size:11px;color:var(--pu);margin-top:6px" id="fcs"></div>
+        </div>
+        <div class="cface cbk">
+          <div class="cq">答案</div>
+          <div class="cans" id="fca">-</div>
+          <div class="csub" id="fcb"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sdots" id="sdots"></div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+      <button class="btn bs bsm" onclick="sGo(-1)">← 上一张</button>
+      <button class="btn br bsm" onclick="markS(false)">❌ 没记住</button>
+      <button class="btn bg bsm" onclick="markS(true)">✅ 记住了</button>
+      <button class="btn bs bsm" onclick="sGo(1)">下一张 →</button>
+    </div>
+    <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:10px" id="sprog"></div>
+  </div>
+</div>
+
+<!-- ④ 型号速查 -->
+<div id="pg-browse" class="pg">
+  <div class="cn" id="bcnt"></div>
+  <div class="tbw">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortB('model')">轩琅型号</th>
+          <th onclick="sortB('ouke')">欧克型号</th>
+          <th onclick="sortB('series')">系列</th>
+          <th onclick="sortB('color')">颜色</th>
+          <th onclick="sortB('size')">粒径</th>
+          <th onclick="sortB('mesh')">目数</th>
+          <th>记录</th>
+        </tr>
+      </thead>
+      <tbody id="btbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ⑤ 我的记录 -->
+<div id="pg-stats" class="pg">
+  <div id="stcont"></div>
+</div>
+
+<script>
+const DB=[
+  {
+    "model": "L100ADP",
+    "ouke": "1100ADP",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L110BDP",
+    "ouke": "1110BDP",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L100",
+    "ouke": "1100B",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L102",
+    "ouke": "1102",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-80",
+    "mesh": "300"
+  },
+  {
+    "model": "L110",
+    "ouke": "1110",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L111",
+    "ouke": "1111",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L112",
+    "ouke": "1112",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "<10",
+    "mesh": "1500"
+  },
+  {
+    "model": "L118",
+    "ouke": "1118",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L120",
+    "ouke": "1120A",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L120B",
+    "ouke": "1120B",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L130",
+    "ouke": "1130",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L151",
+    "ouke": "1151",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "L171",
+    "ouke": "1171",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L181",
+    "ouke": "1181",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L203",
+    "ouke": "2103",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L211",
+    "ouke": "2111",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L023",
+    "ouke": "2123",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L025",
+    "ouke": "2125",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L251",
+    "ouke": "2151",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "2777",
+    "ouke": "2777",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L100T",
+    "ouke": "T100",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L102T",
+    "ouke": "T102",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-80",
+    "mesh": "300"
+  },
+  {
+    "model": "L123",
+    "ouke": "T123",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L130T",
+    "ouke": "T130",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "OX100L",
+    "ouke": "OX100",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX111L",
+    "ouke": "OX111",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "OX119L",
+    "ouke": "OX119",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "OX119ML",
+    "ouke": "OX119M",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "OX120L",
+    "ouke": "OX120",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "OX123L",
+    "ouke": "OX123",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L153",
+    "ouke": "OX153",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "L163",
+    "ouke": "OX163",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L183",
+    "ouke": "OX183",
+    "series": "1000系列",
+    "color": "超闪银",
+    "size": "50-500",
+    "mesh": "40"
+  },
+  {
+    "model": "1530",
+    "ouke": "1530",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "1502",
+    "ouke": "1502",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "1504",
+    "ouke": "1504",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-60",
+    "mesh": "700"
+  },
+  {
+    "model": "103M",
+    "ouke": "103M",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "1000"
+  },
+  {
+    "model": "111M",
+    "ouke": "111M",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "5-15",
+    "mesh": "400"
+  },
+  {
+    "model": "8120",
+    "ouke": "8120",
+    "series": "1000系列",
+    "color": "瓦灰",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "8110",
+    "ouke": "8110",
+    "series": "1000系列",
+    "color": "银灰",
+    "size": "5-15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L9110S",
+    "ouke": "OK91105",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L1030",
+    "ouke": "L1030",
+    "series": "1000系列",
+    "color": "银白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L200",
+    "ouke": "2200",
+    "series": "2000系列",
+    "color": "干涉金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L201",
+    "ouke": "2201",
+    "series": "2000系列",
+    "color": "干涉金",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L205",
+    "ouke": "2205",
+    "series": "2000系列",
+    "color": "干涉金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L239",
+    "ouke": "2239",
+    "series": "2000系列",
+    "color": "干涉金",
+    "size": "30-150",
+    "mesh": "250"
+  },
+  {
+    "model": "L210",
+    "ouke": "2210",
+    "series": "2000系列",
+    "color": "干涉红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L212",
+    "ouke": "2212",
+    "series": "2000系列",
+    "color": "干涉红",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L213",
+    "ouke": "2213",
+    "series": "2000系列",
+    "color": "干涉红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L216",
+    "ouke": "2216",
+    "series": "2000系列",
+    "color": "干涉桔红",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L218",
+    "ouke": "2218",
+    "series": "2000系列",
+    "color": "干涉紫",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L219",
+    "ouke": "2219",
+    "series": "2000系列",
+    "color": "干涉紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L220",
+    "ouke": "2220",
+    "series": "2000系列",
+    "color": "干涉紫",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L221",
+    "ouke": "2211",
+    "series": "2000系列",
+    "color": "干涉紫红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L223",
+    "ouke": "2223",
+    "series": "2000系列",
+    "color": "干涉兰",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L224",
+    "ouke": "2224",
+    "series": "2000系列",
+    "color": "干涉兰",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L225",
+    "ouke": "2225",
+    "series": "2000系列",
+    "color": "干涉兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L289",
+    "ouke": "2289",
+    "series": "2000系列",
+    "color": "干涉兰",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "L233",
+    "ouke": "2233",
+    "series": "2000系列",
+    "color": "干涉绿",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L234",
+    "ouke": "2234",
+    "series": "2000系列",
+    "color": "干涉绿",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L235",
+    "ouke": "2235",
+    "series": "2000系列",
+    "color": "干涉绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX239L",
+    "ouke": "OX239",
+    "series": "2000系列",
+    "color": "闪烁金",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "OX279L",
+    "ouke": "OX279",
+    "series": "2000系列",
+    "color": "闪烁紫",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "OX7219L",
+    "ouke": "OX7219",
+    "series": "2000系列",
+    "color": "超强紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "101金",
+    "ouke": "101金",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L300",
+    "ouke": "3300",
+    "series": "3000系列",
+    "color": "黄铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L301",
+    "ouke": "3101",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L303A",
+    "ouke": "303",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L303",
+    "ouke": "3303",
+    "series": "3000系列",
+    "color": "黄铜金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L304",
+    "ouke": "3104",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "L307",
+    "ouke": "3307",
+    "series": "3000系列",
+    "color": "深黄金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L311",
+    "ouke": "3311",
+    "series": "3000系列",
+    "color": "桔黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L312",
+    "ouke": "3312",
+    "series": "3000系列",
+    "color": "桔黄",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L317",
+    "ouke": "3317",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L320",
+    "ouke": "3320",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L323",
+    "ouke": "3233",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L340",
+    "ouke": "3340",
+    "series": "3000系列",
+    "color": "青铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L350",
+    "ouke": "3350",
+    "series": "3000系列",
+    "color": "金黄",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "L360",
+    "ouke": "3360",
+    "series": "3000系列",
+    "color": "紫金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L388",
+    "ouke": "3388",
+    "series": "3000系列",
+    "color": "土红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L389",
+    "ouke": "3389",
+    "series": "3000系列",
+    "color": "土红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L315",
+    "ouke": "L315",
+    "series": "3000系列",
+    "color": "金",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L320Y",
+    "ouke": "L320Y",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "3319",
+    "ouke": "3319",
+    "series": "3000系列",
+    "color": "深金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "3355",
+    "ouke": "3355",
+    "series": "3000系列",
+    "color": "金",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "3801",
+    "ouke": "3801",
+    "series": "3000系列",
+    "color": "黄玫瑰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "3802",
+    "ouke": "3802",
+    "series": "3000系列",
+    "color": "粉玫瑰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L302M",
+    "ouke": "JS302M",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L302S",
+    "ouke": "JS302",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "JS302A",
+    "ouke": "JS302A",
+    "series": "3000系列",
+    "color": "金刚金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L302BS",
+    "ouke": "JS302B",
+    "series": "3000系列",
+    "color": "黄金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L3340S",
+    "ouke": "JS3340",
+    "series": "3000系列",
+    "color": "黄铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L312S",
+    "ouke": "JS312",
+    "series": "3000系列",
+    "color": "超闪金",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L326S",
+    "ouke": "JS326",
+    "series": "3000系列",
+    "color": "金黄",
+    "size": "100-260",
+    "mesh": "80"
+  },
+  {
+    "model": "JS310",
+    "ouke": "JS310",
+    "series": "3000系列",
+    "color": "金",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "JS388",
+    "ouke": "JS388",
+    "series": "3000系列",
+    "color": "金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "JS311",
+    "ouke": "JS311",
+    "series": "3000系列",
+    "color": "金",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "JS331",
+    "ouke": "JS331",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX318",
+    "ouke": "OX318",
+    "series": "3000系列",
+    "color": "香槟金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L330",
+    "ouke": "L330",
+    "series": "3000系列",
+    "color": "土豪金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L209S",
+    "ouke": "L209S",
+    "series": "3000系列",
+    "color": "玫瑰金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "OX5303",
+    "ouke": "OX5303",
+    "series": "3000系列",
+    "color": "金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "OX350L",
+    "ouke": "OX350",
+    "series": "3000系列",
+    "color": "闪烁金红",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "OX383",
+    "ouke": "OX383",
+    "series": "3000系列",
+    "color": "超闪金",
+    "size": "50-500",
+    "mesh": "40"
+  },
+  {
+    "model": "38182",
+    "ouke": "38182",
+    "series": "3000系列",
+    "color": "金变蓝",
+    "size": "80-180",
+    "mesh": "20"
+  },
+  {
+    "model": "37181",
+    "ouke": "37181",
+    "series": "3000系列",
+    "color": "金变银",
+    "size": "80-180",
+    "mesh": "20"
+  },
+  {
+    "model": "303A",
+    "ouke": "303A",
+    "series": "3000系列",
+    "color": "深金",
+    "size": "5-15",
+    "mesh": "1000"
+  },
+  {
+    "model": "303B",
+    "ouke": "303B",
+    "series": "3000系列",
+    "color": "金",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "303C",
+    "ouke": "303C",
+    "series": "3000系列",
+    "color": "深金",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "3820",
+    "ouke": "3820",
+    "series": "3000系列",
+    "color": "玫瑰红",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "3920",
+    "ouke": "3920",
+    "series": "3000系列",
+    "color": "浅金",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "OX300BL",
+    "ouke": "OX300B",
+    "series": "仿古系列",
+    "color": "古铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX303BL",
+    "ouke": "OX303B",
+    "series": "仿古系列",
+    "color": "古铜金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "OX320BL",
+    "ouke": "OX320B",
+    "series": "仿古系列",
+    "color": "古铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX340BL",
+    "ouke": "OX340B",
+    "series": "仿古系列",
+    "color": "青铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX360BL",
+    "ouke": "OX360B",
+    "series": "仿古系列",
+    "color": "黑金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX038L",
+    "ouke": "OX038",
+    "series": "仿古系列",
+    "color": "古铜",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX500L",
+    "ouke": "OX500",
+    "series": "仿古系列",
+    "color": "棕黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX524L",
+    "ouke": "OX524",
+    "series": "仿古系列",
+    "color": "紫红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "OX500CL",
+    "ouke": "OX500C",
+    "series": "仿古系列",
+    "color": "红铜",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L405A",
+    "ouke": "4005A",
+    "series": "4000系列",
+    "color": "浅茶色",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L450A",
+    "ouke": "4500A",
+    "series": "4000系列",
+    "color": "棕红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L400",
+    "ouke": "4500B",
+    "series": "4000系列",
+    "color": "棕黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L421",
+    "ouke": "4521",
+    "series": "4000系列",
+    "color": "棕黄",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L4524",
+    "ouke": "4524",
+    "series": "4000系列",
+    "color": "酒红",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L402",
+    "ouke": "4502",
+    "series": "4000系列",
+    "color": "棕黄",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L403",
+    "ouke": "4503",
+    "series": "4000系列",
+    "color": "朱红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L404",
+    "ouke": "4504",
+    "series": "4000系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L405",
+    "ouke": "4505",
+    "series": "4000系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L406",
+    "ouke": "4506",
+    "series": "4000系列",
+    "color": "紫红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L407",
+    "ouke": "4507",
+    "series": "4000系列",
+    "color": "紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L410",
+    "ouke": "4510",
+    "series": "4000系列",
+    "color": "朱红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L422",
+    "ouke": "4522",
+    "series": "4000系列",
+    "color": "绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L428",
+    "ouke": "4528",
+    "series": "4000系列",
+    "color": "褐",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L431",
+    "ouke": "4531",
+    "series": "4000系列",
+    "color": "红褐",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L440",
+    "ouke": "4540",
+    "series": "4000系列",
+    "color": "棕黄",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "L450",
+    "ouke": "4550",
+    "series": "4000系列",
+    "color": "深棕黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L452",
+    "ouke": "4552",
+    "series": "4000系列",
+    "color": "深棕黄",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L453",
+    "ouke": "4553",
+    "series": "4000系列",
+    "color": "闪烁棕黄",
+    "size": "10-150",
+    "mesh": "250"
+  },
+  {
+    "model": "L460",
+    "ouke": "4560",
+    "series": "4000系列",
+    "color": "橙红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L461",
+    "ouke": "4561",
+    "series": "4000系列",
+    "color": "橙红",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L462",
+    "ouke": "4562",
+    "series": "4000系列",
+    "color": "橙红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L463",
+    "ouke": "4563",
+    "series": "4000系列",
+    "color": "闪烁橙红",
+    "size": "10-150",
+    "mesh": "250"
+  },
+  {
+    "model": "L4663",
+    "ouke": "4663",
+    "series": "4000系列",
+    "color": "闪烁橙红",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L4653",
+    "ouke": "4653",
+    "series": "4000系列",
+    "color": "闪烁棕黄",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L4673",
+    "ouke": "4673",
+    "series": "4000系列",
+    "color": "闪烁酒红",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L473",
+    "ouke": "4573",
+    "series": "4000系列",
+    "color": "闪烁酒红",
+    "size": "10-150",
+    "mesh": "250"
+  },
+  {
+    "model": "L4252",
+    "ouke": "4252",
+    "series": "4000系列",
+    "color": "橙红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L510A",
+    "ouke": "5100A",
+    "series": "5000系列",
+    "color": "灰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L510B",
+    "ouke": "5100B",
+    "series": "5000系列",
+    "color": "黑",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L512AB",
+    "ouke": "5120AB",
+    "series": "5000系列",
+    "color": "黑",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L510AB2",
+    "ouke": "5100AB2",
+    "series": "5000系列",
+    "color": "黑",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L512AB2",
+    "ouke": "5120AB2",
+    "series": "5000系列",
+    "color": "黑",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L510G",
+    "ouke": "5100G",
+    "series": "5000系列",
+    "color": "绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L510I",
+    "ouke": "5100I",
+    "series": "5000系列",
+    "color": "兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L510VR",
+    "ouke": "5100VR",
+    "series": "5000系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L510Y",
+    "ouke": "5100Y",
+    "series": "5000系列",
+    "color": "黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L518R",
+    "ouke": "5118R",
+    "series": "5000系列",
+    "color": "红",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L518A",
+    "ouke": "5118A",
+    "series": "5000系列",
+    "color": "灰",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L518Y",
+    "ouke": "5118Y",
+    "series": "5000系列",
+    "color": "黄",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L518AB",
+    "ouke": "5118AB",
+    "series": "5000系列",
+    "color": "黑",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L512B",
+    "ouke": "5112B",
+    "series": "5000系列",
+    "color": "黑",
+    "size": "<10",
+    "mesh": "1000"
+  },
+  {
+    "model": "L5303",
+    "ouke": "5303",
+    "series": "5000系列",
+    "color": "深紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L5304",
+    "ouke": "5304",
+    "series": "5000系列",
+    "color": "宝石蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L603",
+    "ouke": "6103",
+    "series": "6000系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L6123",
+    "ouke": "6123",
+    "series": "6000系列",
+    "color": "银白",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L616",
+    "ouke": "6216",
+    "series": "6000系列",
+    "color": "干涉桔红",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L623",
+    "ouke": "6223",
+    "series": "6000系列",
+    "color": "干涉兰",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L625",
+    "ouke": "6225",
+    "series": "6000系列",
+    "color": "干涉兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L635",
+    "ouke": "6235",
+    "series": "6000系列",
+    "color": "干涉绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L6111",
+    "ouke": "6111",
+    "series": "6000系列",
+    "color": "银白",
+    "size": "5-15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L6151",
+    "ouke": "6151",
+    "series": "6000系列",
+    "color": "银白",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "L6560",
+    "ouke": "6560",
+    "series": "6000系列",
+    "color": "橙红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L619",
+    "ouke": "6219",
+    "series": "6000系列",
+    "color": "干涉紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L602",
+    "ouke": "6002",
+    "series": "6000系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L605",
+    "ouke": "6205",
+    "series": "6000系列",
+    "color": "干涉金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L713R",
+    "ouke": "7213R",
+    "series": "7000系列",
+    "color": "红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L712R",
+    "ouke": "7212R",
+    "series": "7000系列",
+    "color": "洋红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L716YO",
+    "ouke": "7216YO",
+    "series": "7000系列",
+    "color": "橙色",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L721VRA",
+    "ouke": "7211VRA",
+    "series": "7000系列",
+    "color": "深紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L721VRB",
+    "ouke": "7211VRB",
+    "series": "7000系列",
+    "color": "紫红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L723I",
+    "ouke": "7223I",
+    "series": "7000系列",
+    "color": "蓝",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L7225G",
+    "ouke": "7225G",
+    "series": "7000系列",
+    "color": "兰绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7233Y",
+    "ouke": "7233Y",
+    "series": "7000系列",
+    "color": "绿黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L723VR",
+    "ouke": "7213VR",
+    "series": "7000系列",
+    "color": "深红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L725G",
+    "ouke": "7205G",
+    "series": "7000系列",
+    "color": "金绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L725I",
+    "ouke": "7205I",
+    "series": "7000系列",
+    "color": "金兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L725IA",
+    "ouke": "7225IA",
+    "series": "7000系列",
+    "color": "深兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L725IB",
+    "ouke": "7225IB",
+    "series": "7000系列",
+    "color": "兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L725IC",
+    "ouke": "7225IC",
+    "series": "7000系列",
+    "color": "兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L725VR",
+    "ouke": "7225VR",
+    "series": "7000系列",
+    "color": "兰紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L713R8",
+    "ouke": "7213R8",
+    "series": "7000系列",
+    "color": "红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L725Y",
+    "ouke": "7235Y",
+    "series": "7000系列",
+    "color": "绿黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L729V",
+    "ouke": "7219V",
+    "series": "7000系列",
+    "color": "紫罗兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7303",
+    "ouke": "7303",
+    "series": "7000系列",
+    "color": "红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7304",
+    "ouke": "7304",
+    "series": "7000系列",
+    "color": "樱红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L735G",
+    "ouke": "7235G",
+    "series": "7000系列",
+    "color": "深绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L735I",
+    "ouke": "7235I",
+    "series": "7000系列",
+    "color": "绿兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L750VR",
+    "ouke": "7205VR",
+    "series": "7000系列",
+    "color": "金紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7205CR",
+    "ouke": "C7205CR",
+    "series": "C7化妆品系列",
+    "color": "金红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7205G",
+    "ouke": "C7205G",
+    "series": "C7化妆品系列",
+    "color": "金绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7205R",
+    "ouke": "C7205R",
+    "series": "C7化妆品系列",
+    "color": "桔橙",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7205I",
+    "ouke": "C7205I",
+    "series": "C7化妆品系列",
+    "color": "金蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7213G",
+    "ouke": "C7213G",
+    "series": "C7化妆品系列",
+    "color": "红绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7213CR",
+    "ouke": "C7213CR",
+    "series": "C7化妆品系列",
+    "color": "红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7213CRI",
+    "ouke": "C7213CRI",
+    "series": "C7化妆品系列",
+    "color": "红蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7219CR",
+    "ouke": "C7219CR",
+    "series": "C7化妆品系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7219CRI",
+    "ouke": "C7219CRI",
+    "series": "C7化妆品系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7225CR",
+    "ouke": "C7225CR",
+    "series": "C7化妆品系列",
+    "color": "兰紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7225CR2",
+    "ouke": "C7225CR2",
+    "series": "C7化妆品系列",
+    "color": "蓝红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7225G",
+    "ouke": "C7225G",
+    "series": "C7化妆品系列",
+    "color": "蓝绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7225I2",
+    "ouke": "C7225I2",
+    "series": "C7化妆品系列",
+    "color": "蓝紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7225I3",
+    "ouke": "C7225I3",
+    "series": "C7化妆品系列",
+    "color": "蓝紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7225I4",
+    "ouke": "C7225I4",
+    "series": "C7化妆品系列",
+    "color": "蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7235G",
+    "ouke": "C7235G",
+    "series": "C7化妆品系列",
+    "color": "绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7235I",
+    "ouke": "C7235I",
+    "series": "C7化妆品系列",
+    "color": "绿蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC74504CR",
+    "ouke": "C74504CR",
+    "series": "C7化妆品系列",
+    "color": "紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC74504CRI",
+    "ouke": "C74504CRI",
+    "series": "C7化妆品系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7219R",
+    "ouke": "C7219R",
+    "series": "C7化妆品系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7219I",
+    "ouke": "C7219I",
+    "series": "C7化妆品系列",
+    "color": "紫蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7219G",
+    "ouke": "C7219G",
+    "series": "C7化妆品系列",
+    "color": "紫绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7219M",
+    "ouke": "C7219M",
+    "series": "C7化妆品系列",
+    "color": "紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7213R3",
+    "ouke": "C7213R3",
+    "series": "C7化妆品系列",
+    "color": "红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7213R9",
+    "ouke": "C7213R9",
+    "series": "C7化妆品系列",
+    "color": "红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7205Y4",
+    "ouke": "C7205Y4",
+    "series": "C7化妆品系列",
+    "color": "黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7205YG",
+    "ouke": "C7205YG",
+    "series": "C7化妆品系列",
+    "color": "果绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "LC7235G2",
+    "ouke": "C7235G2",
+    "series": "C7化妆品系列",
+    "color": "绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "CE1100AB2",
+    "ouke": "CE1100AB2",
+    "series": "C7化妆品系列",
+    "color": "黑",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "CE1118B2",
+    "ouke": "CE1118B2",
+    "series": "C7化妆品系列",
+    "color": "黑",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "CE2205B2",
+    "ouke": "CE2205B2",
+    "series": "C7化妆品系列",
+    "color": "黑金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "CE2212HB2",
+    "ouke": "CE2212HB2",
+    "series": "C7化妆品系列",
+    "color": "黑红",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "CE2213B2",
+    "ouke": "CE2213B2",
+    "series": "C7化妆品系列",
+    "color": "黑红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "CE2219B2",
+    "ouke": "CE2219B2",
+    "series": "C7化妆品系列",
+    "color": "黑紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "CE2225B2",
+    "ouke": "CE2225B2",
+    "series": "C7化妆品系列",
+    "color": "黑蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "CE2235B2",
+    "ouke": "CE2235B2",
+    "series": "C7化妆品系列",
+    "color": "黑绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "CE360B2",
+    "ouke": "CE360B2",
+    "series": "C7化妆品系列",
+    "color": "古铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L805",
+    "ouke": "8205",
+    "series": "8000系列",
+    "color": "黄绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L819",
+    "ouke": "8219",
+    "series": "8000系列",
+    "color": "紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L825",
+    "ouke": "8225",
+    "series": "8000系列",
+    "color": "兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L835",
+    "ouke": "8235",
+    "series": "8000系列",
+    "color": "绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L825B",
+    "ouke": "8225B",
+    "series": "8000系列",
+    "color": "兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L835B",
+    "ouke": "8235B",
+    "series": "8000系列",
+    "color": "绿",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L830",
+    "ouke": "8230",
+    "series": "8000系列",
+    "color": "兰绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L823",
+    "ouke": "8213",
+    "series": "8000系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L833",
+    "ouke": "8233",
+    "series": "8000系列",
+    "color": "绿",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L912",
+    "ouke": "9120",
+    "series": "9000系列",
+    "color": "黑珍珠",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L910",
+    "ouke": "9100",
+    "series": "9000系列",
+    "color": "黑珍珠",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L730A",
+    "ouke": "HC730A",
+    "series": "水晶系列",
+    "color": "深锻金",
+    "size": "5-30",
+    "mesh": "800"
+  },
+  {
+    "model": "L730AA",
+    "ouke": "HC730AA",
+    "series": "水晶系列",
+    "color": "深绒金",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L701AA",
+    "ouke": "HC701AA",
+    "series": "水晶系列",
+    "color": "银绒白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L711A",
+    "ouke": "HC711A",
+    "series": "水晶系列",
+    "color": "水晶银",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L721A",
+    "ouke": "HC721A",
+    "series": "水晶系列",
+    "color": "水晶金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L722A",
+    "ouke": "HC722A",
+    "series": "水晶系列",
+    "color": "水晶红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L723A",
+    "ouke": "HC723A",
+    "series": "水晶系列",
+    "color": "水晶紫",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L724A",
+    "ouke": "HC724A",
+    "series": "水晶系列",
+    "color": "水晶兰",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L725A",
+    "ouke": "HC725A",
+    "series": "水晶系列",
+    "color": "水晶绿",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L754AA",
+    "ouke": "HC754AA",
+    "series": "水晶系列",
+    "color": "酒红",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L305A",
+    "ouke": "HC305A",
+    "series": "水晶系列",
+    "color": "明亮金黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L307A",
+    "ouke": "HC307A",
+    "series": "水晶系列",
+    "color": "明亮青光金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L312A",
+    "ouke": "HC312A",
+    "series": "水晶系列",
+    "color": "明亮绿相金",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L711AB",
+    "ouke": "HC711AB",
+    "series": "水晶系列",
+    "color": "水晶银",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "L711B",
+    "ouke": "HC711B",
+    "series": "水晶系列",
+    "color": "水晶闪银",
+    "size": "10-60",
+    "mesh": "600"
+  },
+  {
+    "model": "L721B",
+    "ouke": "HC721B",
+    "series": "水晶系列",
+    "color": "水晶金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L722B",
+    "ouke": "HC722B",
+    "series": "水晶系列",
+    "color": "水晶红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L723B",
+    "ouke": "HC723B",
+    "series": "水晶系列",
+    "color": "水晶紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L724B",
+    "ouke": "HC724B",
+    "series": "水晶系列",
+    "color": "水晶蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L725B",
+    "ouke": "HC725B",
+    "series": "水晶系列",
+    "color": "水晶绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L730B",
+    "ouke": "HC730B",
+    "series": "水晶系列",
+    "color": "深金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L750B",
+    "ouke": "HC750B",
+    "series": "水晶系列",
+    "color": "棕灿黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L754B",
+    "ouke": "HC754B",
+    "series": "水晶系列",
+    "color": "宗灿红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L701C",
+    "ouke": "HC701C",
+    "series": "水晶系列",
+    "color": "水晶银",
+    "size": "20-95",
+    "mesh": "200"
+  },
+  {
+    "model": "L721C",
+    "ouke": "HC721C",
+    "series": "水晶系列",
+    "color": "星灿金",
+    "size": "20-95",
+    "mesh": "200"
+  },
+  {
+    "model": "L722C",
+    "ouke": "HC722C",
+    "series": "水晶系列",
+    "color": "霞光红",
+    "size": "20-95",
+    "mesh": "200"
+  },
+  {
+    "model": "L723C",
+    "ouke": "HC723C",
+    "series": "水晶系列",
+    "color": "水晶紫",
+    "size": "20-95",
+    "mesh": "200"
+  },
+  {
+    "model": "L724C",
+    "ouke": "HC724C",
+    "series": "水晶系列",
+    "color": "超闪蓝",
+    "size": "20-95",
+    "mesh": "200"
+  },
+  {
+    "model": "L725C",
+    "ouke": "HC725C",
+    "series": "水晶系列",
+    "color": "超闪绿",
+    "size": "20-95",
+    "mesh": "200"
+  },
+  {
+    "model": "L730C",
+    "ouke": "HC730C",
+    "series": "水晶系列",
+    "color": "黄铜金",
+    "size": "20-95",
+    "mesh": "200"
+  },
+  {
+    "model": "L750C",
+    "ouke": "HC750C",
+    "series": "水晶系列",
+    "color": "棕黄",
+    "size": "20-95",
+    "mesh": "200"
+  },
+  {
+    "model": "L754C",
+    "ouke": "HC754C",
+    "series": "水晶系列",
+    "color": "紫红",
+    "size": "20-95",
+    "mesh": "200"
+  },
+  {
+    "model": "L7721C",
+    "ouke": "HC7721C",
+    "series": "水晶系列",
+    "color": "超强金",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L7722C",
+    "ouke": "HC7722C",
+    "series": "水晶系列",
+    "color": "超强红",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L7723C",
+    "ouke": "HC7723C",
+    "series": "水晶系列",
+    "color": "超强紫",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L7724C",
+    "ouke": "HC7724C",
+    "series": "水晶系列",
+    "color": "超强蓝",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L7725C",
+    "ouke": "HC7725C",
+    "series": "水晶系列",
+    "color": "超强绿",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L701D",
+    "ouke": "HC701D",
+    "series": "水晶系列",
+    "color": "水晶银",
+    "size": "50-250",
+    "mesh": "80"
+  },
+  {
+    "model": "L721D",
+    "ouke": "HC721D",
+    "series": "水晶系列",
+    "color": "星灿金",
+    "size": "50-250",
+    "mesh": "80"
+  },
+  {
+    "model": "L722D",
+    "ouke": "HC722D",
+    "series": "水晶系列",
+    "color": "霞光红",
+    "size": "50-250",
+    "mesh": "80"
+  },
+  {
+    "model": "L723D",
+    "ouke": "HC723D",
+    "series": "水晶系列",
+    "color": "水晶紫",
+    "size": "50-250",
+    "mesh": "80"
+  },
+  {
+    "model": "L724D",
+    "ouke": "HC724D",
+    "series": "水晶系列",
+    "color": "超闪蓝",
+    "size": "50-250",
+    "mesh": "80"
+  },
+  {
+    "model": "L725D",
+    "ouke": "HC725D",
+    "series": "水晶系列",
+    "color": "超闪绿",
+    "size": "50-250",
+    "mesh": "80"
+  },
+  {
+    "model": "L701DA",
+    "ouke": "HC701DA",
+    "series": "水晶系列",
+    "color": "水晶银",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L721DA",
+    "ouke": "HC721DA",
+    "series": "水晶系列",
+    "color": "星灿金",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L722DA",
+    "ouke": "HC722DA",
+    "series": "水晶系列",
+    "color": "霞光红",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L723DA",
+    "ouke": "HC723DA",
+    "series": "水晶系列",
+    "color": "水晶紫",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L724DA",
+    "ouke": "HC724DA",
+    "series": "水晶系列",
+    "color": "超闪蓝",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L725DA",
+    "ouke": "HC725DA",
+    "series": "水晶系列",
+    "color": "超闪绿",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L730DA",
+    "ouke": "HC730DA",
+    "series": "水晶系列",
+    "color": "深闪金",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L750DA",
+    "ouke": "HC750DA",
+    "series": "水晶系列",
+    "color": "棕闪金",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L754DA",
+    "ouke": "HC754DA",
+    "series": "水晶系列",
+    "color": "酒闪红",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L701DP",
+    "ouke": "CHC701DP",
+    "series": "水晶系列",
+    "color": "水晶粉",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L711BB",
+    "ouke": "CHC711BB",
+    "series": "水晶系列",
+    "color": "黑",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC103",
+    "ouke": "HC103",
+    "series": "水晶系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC123",
+    "ouke": "HC123",
+    "series": "水晶系列",
+    "color": "水晶银",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "HC153",
+    "ouke": "HC153",
+    "series": "水晶系列",
+    "color": "银白",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "HC112",
+    "ouke": "HC112",
+    "series": "水晶系列",
+    "color": "冰白",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "HC126",
+    "ouke": "HC126",
+    "series": "水晶系列",
+    "color": "冰白",
+    "size": "100-260",
+    "mesh": "80"
+  },
+  {
+    "model": "D100",
+    "ouke": "D100",
+    "series": "水晶系列",
+    "color": "丰田白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "C99015",
+    "ouke": "C99015",
+    "series": "水晶系列",
+    "color": "超白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "C99060",
+    "ouke": "C99060",
+    "series": "水晶系列",
+    "color": "超白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "C99025",
+    "ouke": "C99025",
+    "series": "水晶系列",
+    "color": "超白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "OX001",
+    "ouke": "OX001",
+    "series": "水晶系列",
+    "color": "银白",
+    "size": "20-1000",
+    "mesh": ""
+  },
+  {
+    "model": "OX002",
+    "ouke": "OX002",
+    "series": "水晶系列",
+    "color": "银白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "OX003",
+    "ouke": "OX003",
+    "series": "水晶系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "OX004",
+    "ouke": "OX004",
+    "series": "水晶系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX006",
+    "ouke": "OX006",
+    "series": "水晶系列",
+    "color": "银白",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX008",
+    "ouke": "OX008",
+    "series": "水晶系列",
+    "color": "银白",
+    "size": "50-350",
+    "mesh": ""
+  },
+  {
+    "model": "OX340",
+    "ouke": "OX340",
+    "series": "水晶系列",
+    "color": "黄铜金",
+    "size": "10-70",
+    "mesh": "325"
+  },
+  {
+    "model": "OX341",
+    "ouke": "OX341",
+    "series": "水晶系列",
+    "color": "青金",
+    "size": "20-1000",
+    "mesh": ""
+  },
+  {
+    "model": "OX370",
+    "ouke": "OX370",
+    "series": "水晶系列",
+    "color": "深金色",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX390",
+    "ouke": "OX390",
+    "series": "水晶系列",
+    "color": "超闪金",
+    "size": "100-700",
+    "mesh": "20"
+  },
+  {
+    "model": "OX350B",
+    "ouke": "OX350B",
+    "series": "水晶系列",
+    "color": "艳金色",
+    "size": "30-80",
+    "mesh": ""
+  },
+  {
+    "model": "OX470",
+    "ouke": "OX470",
+    "series": "水晶系列",
+    "color": "橘红色",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX651",
+    "ouke": "OX651",
+    "series": "水晶系列",
+    "color": "金铜色",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX652",
+    "ouke": "OX652",
+    "series": "水晶系列",
+    "color": "红铜色",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX653",
+    "ouke": "OX653",
+    "series": "水晶系列",
+    "color": "酒红色",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX261",
+    "ouke": "OX261",
+    "series": "水晶系列",
+    "color": "干涉金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX262",
+    "ouke": "OX262",
+    "series": "水晶系列",
+    "color": "干涉红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX263",
+    "ouke": "OX263",
+    "series": "水晶系列",
+    "color": "干涉紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX264",
+    "ouke": "OX264",
+    "series": "水晶系列",
+    "color": "干涉蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX265",
+    "ouke": "OX265",
+    "series": "水晶系列",
+    "color": "干涉绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "OX251",
+    "ouke": "OX251",
+    "series": "水晶系列",
+    "color": "干涉金",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX252",
+    "ouke": "OX252",
+    "series": "水晶系列",
+    "color": "干涉红",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX253",
+    "ouke": "OX253",
+    "series": "水晶系列",
+    "color": "干涉紫",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX254",
+    "ouke": "OX254",
+    "series": "水晶系列",
+    "color": "干涉蓝",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX255",
+    "ouke": "OX255",
+    "series": "水晶系列",
+    "color": "干涉绿",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "OX530",
+    "ouke": "OX530",
+    "series": "水晶系列",
+    "color": "金铜色",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "10101",
+    "ouke": "10101",
+    "series": "水晶系列",
+    "color": "冰晶银",
+    "size": "20-180",
+    "mesh": ""
+  },
+  {
+    "model": "10102",
+    "ouke": "10102",
+    "series": "水晶系列",
+    "color": "冰晶银",
+    "size": "40-180",
+    "mesh": "80"
+  },
+  {
+    "model": "10103",
+    "ouke": "10103",
+    "series": "水晶系列",
+    "color": "冰晶银",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "10201",
+    "ouke": "10201",
+    "series": "水晶系列",
+    "color": "星灿金",
+    "size": "20-180",
+    "mesh": ""
+  },
+  {
+    "model": "10202",
+    "ouke": "10202",
+    "series": "水晶系列",
+    "color": "星灿金",
+    "size": "40-180",
+    "mesh": "80"
+  },
+  {
+    "model": "10203",
+    "ouke": "10203",
+    "series": "水晶系列",
+    "color": "星灿金",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "10301",
+    "ouke": "10301",
+    "series": "水晶系列",
+    "color": "霞光红",
+    "size": "20-180",
+    "mesh": ""
+  },
+  {
+    "model": "10302",
+    "ouke": "10302",
+    "series": "水晶系列",
+    "color": "霞光红",
+    "size": "40-180",
+    "mesh": "80"
+  },
+  {
+    "model": "10303",
+    "ouke": "10303",
+    "series": "水晶系列",
+    "color": "霞光红",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "10401",
+    "ouke": "10401",
+    "series": "水晶系列",
+    "color": "水晶紫",
+    "size": "20-180",
+    "mesh": ""
+  },
+  {
+    "model": "10402",
+    "ouke": "10402",
+    "series": "水晶系列",
+    "color": "水晶紫",
+    "size": "40-180",
+    "mesh": "80"
+  },
+  {
+    "model": "10403",
+    "ouke": "10403",
+    "series": "水晶系列",
+    "color": "水晶紫",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "10501",
+    "ouke": "10501",
+    "series": "水晶系列",
+    "color": "超闪蓝",
+    "size": "20-180",
+    "mesh": ""
+  },
+  {
+    "model": "10502",
+    "ouke": "10502",
+    "series": "水晶系列",
+    "color": "超闪蓝",
+    "size": "40-180",
+    "mesh": "80"
+  },
+  {
+    "model": "10503",
+    "ouke": "10503",
+    "series": "水晶系列",
+    "color": "超闪蓝",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "10601",
+    "ouke": "10601",
+    "series": "水晶系列",
+    "color": "超闪绿",
+    "size": "20-180",
+    "mesh": ""
+  },
+  {
+    "model": "10602",
+    "ouke": "10602",
+    "series": "水晶系列",
+    "color": "超闪绿",
+    "size": "40-180",
+    "mesh": "80"
+  },
+  {
+    "model": "10603",
+    "ouke": "10603",
+    "series": "水晶系列",
+    "color": "超闪绿",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "10901",
+    "ouke": "10901",
+    "series": "水晶系列",
+    "color": "金",
+    "size": "40-180",
+    "mesh": "80"
+  },
+  {
+    "model": "10902",
+    "ouke": "10902",
+    "series": "水晶系列",
+    "color": "金",
+    "size": "20-180",
+    "mesh": ""
+  },
+  {
+    "model": "10903",
+    "ouke": "10903",
+    "series": "水晶系列",
+    "color": "金",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "10904",
+    "ouke": "10904",
+    "series": "水晶系列",
+    "color": "古铜",
+    "size": "40-180",
+    "mesh": "80"
+  },
+  {
+    "model": "10905",
+    "ouke": "10905",
+    "series": "水晶系列",
+    "color": "古铜",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "10906",
+    "ouke": "10906",
+    "series": "水晶系列",
+    "color": "古铜",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "10907",
+    "ouke": "10907",
+    "series": "水晶系列",
+    "color": "古铜",
+    "size": "20-70",
+    "mesh": "250"
+  },
+  {
+    "model": "L140S",
+    "ouke": "G140S",
+    "series": "钻石系列",
+    "color": "钻石白",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "L240S",
+    "ouke": "G240S",
+    "series": "钻石系列",
+    "color": "钻石金",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "L340S",
+    "ouke": "G340S",
+    "series": "钻石系列",
+    "color": "钻石红",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "L440S",
+    "ouke": "G440S",
+    "series": "钻石系列",
+    "color": "钻石紫",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "L540S",
+    "ouke": "G540S",
+    "series": "钻石系列",
+    "color": "钻石兰",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "L640S",
+    "ouke": "G640S",
+    "series": "钻石系列",
+    "color": "钻石绿",
+    "size": "30-150",
+    "mesh": "100"
+  },
+  {
+    "model": "L140SS",
+    "ouke": "G140SS",
+    "series": "钻石系列",
+    "color": "钻石白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L240SS",
+    "ouke": "G240SS",
+    "series": "钻石系列",
+    "color": "钻石金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L340SS",
+    "ouke": "G340SS",
+    "series": "钻石系列",
+    "color": "钻石红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L440SS",
+    "ouke": "G440SS",
+    "series": "钻石系列",
+    "color": "钻石紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L540SS",
+    "ouke": "G540SS",
+    "series": "钻石系列",
+    "color": "钻石兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L640SS",
+    "ouke": "G640SS",
+    "series": "钻石系列",
+    "color": "钻石绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L140SA",
+    "ouke": "G140SA",
+    "series": "钻石系列",
+    "color": "钻石白",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "L240SA",
+    "ouke": "G240SA",
+    "series": "钻石系列",
+    "color": "钻石金",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "L340SA",
+    "ouke": "G340SA",
+    "series": "钻石系列",
+    "color": "钻石红",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "L440SA",
+    "ouke": "G440SA",
+    "series": "钻石系列",
+    "color": "钻石紫",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "L540SA",
+    "ouke": "G540SA",
+    "series": "钻石系列",
+    "color": "钻石兰",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "L640SA",
+    "ouke": "G640SA",
+    "series": "钻石系列",
+    "color": "钻石绿",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "L140MS",
+    "ouke": "G140MS",
+    "series": "钻石系列",
+    "color": "钻石白",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L240MS",
+    "ouke": "G240MS",
+    "series": "钻石系列",
+    "color": "钻石金",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L340MS",
+    "ouke": "G340MS",
+    "series": "钻石系列",
+    "color": "钻石红",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L440MS",
+    "ouke": "G440MS",
+    "series": "钻石系列",
+    "color": "钻石紫",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L540MS",
+    "ouke": "G540MS",
+    "series": "钻石系列",
+    "color": "钻石兰",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L640MS",
+    "ouke": "G640MS",
+    "series": "钻石系列",
+    "color": "钻石绿",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L140M",
+    "ouke": "G140M",
+    "series": "钻石系列",
+    "color": "钻石白",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L240M",
+    "ouke": "G240M",
+    "series": "钻石系列",
+    "color": "钻石金",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L340M",
+    "ouke": "G340M",
+    "series": "钻石系列",
+    "color": "钻石红",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L440M",
+    "ouke": "G440M",
+    "series": "钻石系列",
+    "color": "钻石紫",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L540M",
+    "ouke": "G540M",
+    "series": "钻石系列",
+    "color": "钻石兰",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L640M",
+    "ouke": "G640M",
+    "series": "钻石系列",
+    "color": "钻石绿",
+    "size": "50-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L140L",
+    "ouke": "G140L",
+    "series": "钻石系列",
+    "color": "星光白",
+    "size": "60-400",
+    "mesh": "60"
+  },
+  {
+    "model": "L240L",
+    "ouke": "G240L",
+    "series": "钻石系列",
+    "color": "星光金",
+    "size": "60-400",
+    "mesh": "60"
+  },
+  {
+    "model": "L340L",
+    "ouke": "G340L",
+    "series": "钻石系列",
+    "color": "星光红",
+    "size": "60-400",
+    "mesh": "60"
+  },
+  {
+    "model": "L440L",
+    "ouke": "G440L",
+    "series": "钻石系列",
+    "color": "星光紫",
+    "size": "60-400",
+    "mesh": "60"
+  },
+  {
+    "model": "L540L",
+    "ouke": "G540L",
+    "series": "钻石系列",
+    "color": "星光兰",
+    "size": "60-400",
+    "mesh": "60"
+  },
+  {
+    "model": "L640L",
+    "ouke": "G640L",
+    "series": "钻石系列",
+    "color": "星光绿",
+    "size": "60-400",
+    "mesh": "60"
+  },
+  {
+    "model": "L241S",
+    "ouke": "G241S",
+    "series": "钻石系列",
+    "color": "麒麟金",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L341S",
+    "ouke": "G341S",
+    "series": "钻石系列",
+    "color": "浆果红",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L441S",
+    "ouke": "G441S",
+    "series": "钻石系列",
+    "color": "魅惑紫",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L541S",
+    "ouke": "G541S",
+    "series": "钻石系列",
+    "color": "深空蓝",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L641S",
+    "ouke": "G641S",
+    "series": "钻石系列",
+    "color": "孔雀绿",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L642S",
+    "ouke": "G642S",
+    "series": "钻石系列",
+    "color": "橄榄绿",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L1140",
+    "ouke": "L1140",
+    "series": "闪炫系列",
+    "color": "闪炫白",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "L1141",
+    "ouke": "L1141",
+    "series": "闪炫系列",
+    "color": "闪炫白",
+    "size": "20-120",
+    "mesh": ""
+  },
+  {
+    "model": "L1142",
+    "ouke": "L1142",
+    "series": "闪炫系列",
+    "color": "闪炫白",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L1143",
+    "ouke": "L1143",
+    "series": "闪炫系列",
+    "color": "闪炫白",
+    "size": "50-250",
+    "mesh": "90"
+  },
+  {
+    "model": "L1147",
+    "ouke": "L1147",
+    "series": "闪炫系列",
+    "color": "闪炫白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L2240",
+    "ouke": "L2240",
+    "series": "闪炫系列",
+    "color": "闪炫白",
+    "size": "60-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L2241",
+    "ouke": "L2241",
+    "series": "闪炫系列",
+    "color": "闪炫金",
+    "size": "60-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L2242",
+    "ouke": "L2242",
+    "series": "闪炫系列",
+    "color": "闪炫红",
+    "size": "60-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L2243",
+    "ouke": "L2243",
+    "series": "闪炫系列",
+    "color": "闪炫紫",
+    "size": "60-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L2244",
+    "ouke": "L2244",
+    "series": "闪炫系列",
+    "color": "闪炫蓝",
+    "size": "60-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L2245",
+    "ouke": "L2245",
+    "series": "闪炫系列",
+    "color": "闪炫绿",
+    "size": "60-300",
+    "mesh": "80"
+  },
+  {
+    "model": "C99002",
+    "ouke": "C99002",
+    "series": "C99系列",
+    "color": "银白",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "C99004",
+    "ouke": "C99004",
+    "series": "C99系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "C99005",
+    "ouke": "C99005",
+    "series": "C99系列",
+    "color": "银白",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "C99006",
+    "ouke": "C99006",
+    "series": "C99系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "C99200",
+    "ouke": "C99200",
+    "series": "C99系列",
+    "color": "钻石金",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "C99201",
+    "ouke": "C99201",
+    "series": "C99系列",
+    "color": "钻石橙",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "C99202",
+    "ouke": "C99202",
+    "series": "C99系列",
+    "color": "钻石红",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "C99203",
+    "ouke": "C99203",
+    "series": "C99系列",
+    "color": "钻石紫",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "C99204",
+    "ouke": "C99204",
+    "series": "C99系列",
+    "color": "钻石蓝",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "C99205",
+    "ouke": "C99205",
+    "series": "C99系列",
+    "color": "钻石蓝绿",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "C99206",
+    "ouke": "C99206",
+    "series": "C99系列",
+    "color": "钻石绿",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "C99801",
+    "ouke": "C99801",
+    "series": "C99系列",
+    "color": "干涉金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "C99802",
+    "ouke": "C99802",
+    "series": "C99系列",
+    "color": "干涉红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "C99803",
+    "ouke": "C99803",
+    "series": "C99系列",
+    "color": "干涉紫",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "C99804",
+    "ouke": "C99804",
+    "series": "C99系列",
+    "color": "干涉蓝",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "4904",
+    "ouke": "4904",
+    "series": "中国红系列",
+    "color": "中国红",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "48018",
+    "ouke": "48018",
+    "series": "中国红系列",
+    "color": "中国红",
+    "size": "30-180",
+    "mesh": ""
+  },
+  {
+    "model": "48026",
+    "ouke": "48026",
+    "series": "中国红系列",
+    "color": "中国红",
+    "size": "100-260",
+    "mesh": "80"
+  },
+  {
+    "model": "4962",
+    "ouke": "4962",
+    "series": "中国红系列",
+    "color": "中国橙",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "4906",
+    "ouke": "4906",
+    "series": "中国红系列",
+    "color": "中国红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "4972",
+    "ouke": "4972",
+    "series": "中国红系列",
+    "color": "橙红",
+    "size": "5-15",
+    "mesh": "1000"
+  },
+  {
+    "model": "4902",
+    "ouke": "4902",
+    "series": "中国红系列",
+    "color": "超强橙红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "4982",
+    "ouke": "4982",
+    "series": "中国红系列",
+    "color": "紫红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "4966",
+    "ouke": "4966",
+    "series": "中国红系列",
+    "color": "超强橙",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "4974",
+    "ouke": "4974",
+    "series": "中国红系列",
+    "color": "闪烁棕黄",
+    "size": "10-300",
+    "mesh": ""
+  },
+  {
+    "model": "4984",
+    "ouke": "4984",
+    "series": "中国红系列",
+    "color": "紫红",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "48012",
+    "ouke": "48012",
+    "series": "中国红系列",
+    "color": "中国红",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "4684",
+    "ouke": "4684",
+    "series": "中国红系列",
+    "color": "紫红",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "4682",
+    "ouke": "4682",
+    "series": "中国红系列",
+    "color": "紫红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "NH90119",
+    "ouke": "NH90119",
+    "series": "耐候系列",
+    "color": "银白",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "NH90500",
+    "ouke": "NH90500",
+    "series": "耐候系列",
+    "color": "棕红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH92103",
+    "ouke": "NH92103",
+    "series": "耐候系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH92123",
+    "ouke": "NH92123",
+    "series": "耐候系列",
+    "color": "银白",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "NH92151",
+    "ouke": "NH92151",
+    "series": "耐候系列",
+    "color": "银白",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "NH92111",
+    "ouke": "NH92111",
+    "series": "耐候系列",
+    "color": "银白",
+    "size": "5-15",
+    "mesh": "1000"
+  },
+  {
+    "model": "NH92205",
+    "ouke": "NH92205",
+    "series": "耐候系列",
+    "color": "干涉金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH92219",
+    "ouke": "NH92219",
+    "series": "耐候系列",
+    "color": "干涉紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH92223",
+    "ouke": "NH92223",
+    "series": "耐候系列",
+    "color": "干涉蓝",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "NH92225",
+    "ouke": "NH92225",
+    "series": "耐候系列",
+    "color": "干涉兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH90302A",
+    "ouke": "NH90302A",
+    "series": "耐候系列",
+    "color": "金刚金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH93300",
+    "ouke": "NH93300",
+    "series": "耐候系列",
+    "color": "黄铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH93303",
+    "ouke": "NH93303",
+    "series": "耐候系列",
+    "color": "黄铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH93307",
+    "ouke": "NH93307",
+    "series": "耐候系列",
+    "color": "深金黄",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "NH93360",
+    "ouke": "NH93360",
+    "series": "耐候系列",
+    "color": "紫金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH94506",
+    "ouke": "NH94506",
+    "series": "耐候系列",
+    "color": "紫红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "NH94504",
+    "ouke": "NH94504",
+    "series": "耐候系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "NH94560",
+    "ouke": "NH94560",
+    "series": "耐候系列",
+    "color": "橙红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "KH82111",
+    "ouke": "KH82111",
+    "series": "抗黄系列",
+    "color": "银白",
+    "size": "5-15",
+    "mesh": "1000"
+  },
+  {
+    "model": "KH80119",
+    "ouke": "KH80119",
+    "series": "抗黄系列",
+    "color": "银白",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "15-01",
+    "ouke": "15-01",
+    "series": "天鹅绒系列",
+    "color": "银白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "15-02",
+    "ouke": "15-02",
+    "series": "天鹅绒系列",
+    "color": "金",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "15-03",
+    "ouke": "15-03",
+    "series": "天鹅绒系列",
+    "color": "红",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "15-04",
+    "ouke": "15-04",
+    "series": "天鹅绒系列",
+    "color": "紫红",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "15-05",
+    "ouke": "15-05",
+    "series": "天鹅绒系列",
+    "color": "紫",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "15-06",
+    "ouke": "15-06",
+    "series": "天鹅绒系列",
+    "color": "紫兰",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "15-07",
+    "ouke": "15-07",
+    "series": "天鹅绒系列",
+    "color": "兰",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "15-08",
+    "ouke": "15-08",
+    "series": "天鹅绒系列",
+    "color": "金绿",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "15-09",
+    "ouke": "15-09",
+    "series": "天鹅绒系列",
+    "color": "兰绿",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "15-10",
+    "ouke": "15-10",
+    "series": "天鹅绒系列",
+    "color": "绿",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "25-01",
+    "ouke": "25-01",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩银",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "25-02",
+    "ouke": "25-02",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "25-03",
+    "ouke": "25-03",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩玫红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "25-04",
+    "ouke": "25-04",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩紫红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "25-05",
+    "ouke": "25-05",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩紫",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "25-06",
+    "ouke": "25-06",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩蓝",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "25-07",
+    "ouke": "25-07",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩天蓝",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "25-08",
+    "ouke": "25-08",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩亮金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "25-09",
+    "ouke": "25-09",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩绿",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "25-10",
+    "ouke": "25-10",
+    "series": "孔雀彩系列",
+    "color": "孔雀彩果绿",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "60-01",
+    "ouke": "60-01",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓银",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "60-02",
+    "ouke": "60-02",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "60-03",
+    "ouke": "60-03",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓玫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "60-04",
+    "ouke": "60-04",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "60-05",
+    "ouke": "60-05",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "60-06",
+    "ouke": "60-06",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "60-07",
+    "ouke": "60-07",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓天蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "60-08",
+    "ouke": "60-08",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓亮金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "60-09",
+    "ouke": "60-09",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "60-10",
+    "ouke": "60-10",
+    "series": "蝴蝶斓系列",
+    "color": "蝴蝶斓果绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "R015",
+    "ouke": "R015",
+    "series": "碧玉系列",
+    "color": "欧克红",
+    "size": "5-15",
+    "mesh": "1000"
+  },
+  {
+    "model": "R025",
+    "ouke": "R025",
+    "series": "碧玉系列",
+    "color": "欧克红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "R040",
+    "ouke": "R040",
+    "series": "碧玉系列",
+    "color": "欧克红",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "R060",
+    "ouke": "R060",
+    "series": "碧玉系列",
+    "color": "欧克红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "R260",
+    "ouke": "R260",
+    "series": "碧玉系列",
+    "color": "欧克红",
+    "size": "100-260",
+    "mesh": "80"
+  },
+  {
+    "model": "B015",
+    "ouke": "B015",
+    "series": "碧玉系列",
+    "color": "超级干涉兰",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "B040",
+    "ouke": "B040",
+    "series": "碧玉系列",
+    "color": "超级干涉兰",
+    "size": "10-40",
+    "mesh": "600"
+  },
+  {
+    "model": "R080F",
+    "ouke": "R080F",
+    "series": "碧玉系列",
+    "color": "红",
+    "size": "10-80",
+    "mesh": "300"
+  },
+  {
+    "model": "R060F",
+    "ouke": "R060F",
+    "series": "碧玉系列",
+    "color": "红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "B020F",
+    "ouke": "B020F",
+    "series": "碧玉系列",
+    "color": "兰",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "O060F",
+    "ouke": "O060F",
+    "series": "碧玉系列",
+    "color": "橙色",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "G060F",
+    "ouke": "G060F",
+    "series": "碧玉系列",
+    "color": "绿色",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "C060F",
+    "ouke": "C060F",
+    "series": "碧玉系列",
+    "color": "金色",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "G020F",
+    "ouke": "G020F",
+    "series": "碧玉系列",
+    "color": "绿色",
+    "size": "5-20",
+    "mesh": "800"
+  },
+  {
+    "model": "L7721B",
+    "ouke": "HC7721B",
+    "series": "碧玉系列",
+    "color": "超强金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7722B",
+    "ouke": "HC7722B",
+    "series": "碧玉系列",
+    "color": "超强红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7723B",
+    "ouke": "HC7723B",
+    "series": "碧玉系列",
+    "color": "超强紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7724B",
+    "ouke": "HC7724B",
+    "series": "碧玉系列",
+    "color": "超强蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7725B",
+    "ouke": "HC7725B",
+    "series": "碧玉系列",
+    "color": "超强绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7726B",
+    "ouke": "HC7726B",
+    "series": "碧玉系列",
+    "color": "超强干涉绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7727B",
+    "ouke": "HC7727B",
+    "series": "碧玉系列",
+    "color": "超强橙",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7728B",
+    "ouke": "HC7728B",
+    "series": "碧玉系列",
+    "color": "超强紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-44081",
+    "ouke": "L-44081",
+    "series": "碧玉系列",
+    "color": "胭脂",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-44082",
+    "ouke": "L-44082",
+    "series": "碧玉系列",
+    "color": "胭红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-44083",
+    "ouke": "L-44083",
+    "series": "碧玉系列",
+    "color": "雅棕",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-44084",
+    "ouke": "L-44084",
+    "series": "碧玉系列",
+    "color": "橙金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-44086",
+    "ouke": "L-44086",
+    "series": "碧玉系列",
+    "color": "金棕",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-44087",
+    "ouke": "L-44087",
+    "series": "碧玉系列",
+    "color": "闪烁橙",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-353K",
+    "ouke": "L-353K",
+    "series": "碧玉系列",
+    "color": "闪亮黄",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "L-293V",
+    "ouke": "L-293V",
+    "series": "碧玉系列",
+    "color": "闪幻紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-295G",
+    "ouke": "L-295G",
+    "series": "碧玉系列",
+    "color": "闪幻绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-292R",
+    "ouke": "L-292R",
+    "series": "碧玉系列",
+    "color": "闪欢红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-294BL",
+    "ouke": "L-294BL",
+    "series": "碧玉系列",
+    "color": "闪幻蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-291Y",
+    "ouke": "L-291Y",
+    "series": "碧玉系列",
+    "color": "闪幻金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-108",
+    "ouke": "L-108",
+    "series": "碧玉系列",
+    "color": "光泽白",
+    "size": "20-80",
+    "mesh": "300"
+  },
+  {
+    "model": "L-D81",
+    "ouke": "L-D81",
+    "series": "碧玉系列",
+    "color": "闪钻白",
+    "size": "50-250",
+    "mesh": "80"
+  },
+  {
+    "model": "L-160",
+    "ouke": "L-160",
+    "series": "碧玉系列",
+    "color": "亮珍珠",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-763",
+    "ouke": "L-763",
+    "series": "碧玉系列",
+    "color": "高亮橙",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-764",
+    "ouke": "L-764",
+    "series": "碧玉系列",
+    "color": "高亮红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-3250",
+    "ouke": "L-3250",
+    "series": "碧玉系列",
+    "color": "闪金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-3206",
+    "ouke": "L-3206",
+    "series": "碧玉系列",
+    "color": "闪红金",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "L-3208",
+    "ouke": "L-3208",
+    "series": "碧玉系列",
+    "color": "闪绿金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-3226",
+    "ouke": "L-3226",
+    "series": "碧玉系列",
+    "color": "闪黄金",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "L103FM",
+    "ouke": "L103FM",
+    "series": "处理珠光系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L110FM",
+    "ouke": "L110FM",
+    "series": "处理珠光系列",
+    "color": "银白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L120FM",
+    "ouke": "L120FM",
+    "series": "处理珠光系列",
+    "color": "银白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L153FM",
+    "ouke": "L153FM",
+    "series": "处理珠光系列",
+    "color": "闪烁白",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L163FM",
+    "ouke": "L163FM",
+    "series": "处理珠光系列",
+    "color": "闪烁白",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "L183FM",
+    "ouke": "L183FM",
+    "series": "处理珠光系列",
+    "color": "超闪白",
+    "size": "40-300",
+    "mesh": "80"
+  },
+  {
+    "model": "L9111FM",
+    "ouke": "L9111FM",
+    "series": "处理珠光系列",
+    "color": "梦幻银",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "L231FM",
+    "ouke": "L231FM",
+    "series": "处理珠光系列",
+    "color": "干涉绿",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L235FM",
+    "ouke": "L235FM",
+    "series": "处理珠光系列",
+    "color": "干涉绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L201FM",
+    "ouke": "L201FM",
+    "series": "处理珠光系列",
+    "color": "干涉金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L205FM",
+    "ouke": "L205FM",
+    "series": "处理珠光系列",
+    "color": "干涉金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L299FM",
+    "ouke": "L299FM",
+    "series": "处理珠光系列",
+    "color": "干涉金",
+    "size": "10-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L221FM",
+    "ouke": "L221FM",
+    "series": "处理珠光系列",
+    "color": "干涉蓝",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L225FM",
+    "ouke": "L225FM",
+    "series": "处理珠光系列",
+    "color": "干涉蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L300FM",
+    "ouke": "L300FM",
+    "series": "处理珠光系列",
+    "color": "黄铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L302FM",
+    "ouke": "L302FM",
+    "series": "处理珠光系列",
+    "color": "黄铜金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L303FM",
+    "ouke": "L303FM",
+    "series": "处理珠光系列",
+    "color": "黄铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L304FM",
+    "ouke": "L304FM",
+    "series": "处理珠光系列",
+    "color": "金黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L305FM",
+    "ouke": "L305FM",
+    "series": "处理珠光系列",
+    "color": "金黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L306FM",
+    "ouke": "L306FM",
+    "series": "处理珠光系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L323FM",
+    "ouke": "L323FM",
+    "series": "处理珠光系列",
+    "color": "金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L350FM",
+    "ouke": "L350FM",
+    "series": "处理珠光系列",
+    "color": "皇冠金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L353FM",
+    "ouke": "L353FM",
+    "series": "处理珠光系列",
+    "color": "闪光金黄",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L355FM",
+    "ouke": "L355FM",
+    "series": "处理珠光系列",
+    "color": "闪光金",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L530FM",
+    "ouke": "L530FM",
+    "series": "处理珠光系列",
+    "color": "闪光青铜",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L532FM",
+    "ouke": "L532FM",
+    "series": "处理珠光系列",
+    "color": "闪光红棕",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L500FM",
+    "ouke": "L500FM",
+    "series": "处理珠光系列",
+    "color": "棕黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L502FM",
+    "ouke": "L502FM",
+    "series": "处理珠光系列",
+    "color": "棕红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L504FM",
+    "ouke": "L504FM",
+    "series": "处理珠光系列",
+    "color": "酒红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L505FM",
+    "ouke": "L505FM",
+    "series": "处理珠光系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L510FM",
+    "ouke": "L510FM",
+    "series": "处理珠光系列",
+    "color": "朱红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L520FM",
+    "ouke": "L520FM",
+    "series": "处理珠光系列",
+    "color": "缎铜",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L522FM",
+    "ouke": "L522FM",
+    "series": "处理珠光系列",
+    "color": "缎棕",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L524FM",
+    "ouke": "L524FM",
+    "series": "处理珠光系列",
+    "color": "酒红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L533FM",
+    "ouke": "L533FM",
+    "series": "处理珠光系列",
+    "color": "闪红金",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L9540FM",
+    "ouke": "L9540FM",
+    "series": "处理珠光系列",
+    "color": "水晶青铜",
+    "size": "10-30",
+    "mesh": ""
+  },
+  {
+    "model": "L9542FM",
+    "ouke": "L9542FM",
+    "series": "处理珠光系列",
+    "color": "水晶红棕",
+    "size": "10-30",
+    "mesh": ""
+  },
+  {
+    "model": "L9530FM",
+    "ouke": "L9530FM",
+    "series": "处理珠光系列",
+    "color": "水晶闪青铜",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L9315FM",
+    "ouke": "L9315FM",
+    "series": "处理珠光系列",
+    "color": "炫金",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L9317FM",
+    "ouke": "L9317FM",
+    "series": "处理珠光系列",
+    "color": "闪青",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "L935FM",
+    "ouke": "L935FM",
+    "series": "处理珠光系列",
+    "color": "金",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L9350FM",
+    "ouke": "L9350FM",
+    "series": "处理珠光系列",
+    "color": "水晶金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "100CAS",
+    "ouke": "100CAS",
+    "series": "CAS系列",
+    "color": "银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "110CAS",
+    "ouke": "110CAS",
+    "series": "CAS系列",
+    "color": "银白",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "205CAS",
+    "ouke": "205CAS",
+    "series": "CAS系列",
+    "color": "干涉金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "225CAS",
+    "ouke": "225CAS",
+    "series": "CAS系列",
+    "color": "干涉兰",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "304CAS",
+    "ouke": "304CAS",
+    "series": "CAS系列",
+    "color": "金",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "300CAS",
+    "ouke": "300CAS",
+    "series": "CAS系列",
+    "color": "黄铜金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "3311CAS",
+    "ouke": "3311CAS",
+    "series": "CAS系列",
+    "color": "金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "400CAS",
+    "ouke": "400CAS",
+    "series": "CAS系列",
+    "color": "棕黄",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "404CAS",
+    "ouke": "404CAS",
+    "series": "CAS系列",
+    "color": "紫红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "66208CAS",
+    "ouke": "66208CAS",
+    "series": "CAS系列",
+    "color": "超闪金",
+    "size": "30-120",
+    "mesh": "150"
+  },
+  {
+    "model": "77201CAS",
+    "ouke": "77201CAS",
+    "series": "CAS系列",
+    "color": "水晶红",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "7701CAS",
+    "ouke": "7701CAS",
+    "series": "CAS系列",
+    "color": "水晶银白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "99025CAS",
+    "ouke": "99025CAS",
+    "series": "CAS系列",
+    "color": "超白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "1140CAS",
+    "ouke": "1140CAS",
+    "series": "CAS系列",
+    "color": "钻石白",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "2240CAS",
+    "ouke": "2240CAS",
+    "series": "CAS系列",
+    "color": "钻石金",
+    "size": "30-100",
+    "mesh": "300"
+  },
+  {
+    "model": "HC6020",
+    "ouke": "HC6020",
+    "series": "其他系列",
+    "color": "闪珠白",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "HC6406",
+    "ouke": "HC6406",
+    "series": "其他系列",
+    "color": "酒红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC6014",
+    "ouke": "HC6014",
+    "series": "其他系列",
+    "color": "闪白珍珠",
+    "size": "40-200",
+    "mesh": "100"
+  },
+  {
+    "model": "HC6069",
+    "ouke": "HC6069",
+    "series": "其他系列",
+    "color": "闪绿珍珠",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "HC6025",
+    "ouke": "HC6025",
+    "series": "其他系列",
+    "color": "幻金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC6049",
+    "ouke": "HC6049",
+    "series": "其他系列",
+    "color": "幻紫",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC6013",
+    "ouke": "HC6013",
+    "series": "其他系列",
+    "color": "闪珍珠",
+    "size": "20-100",
+    "mesh": "150"
+  },
+  {
+    "model": "HC6015",
+    "ouke": "HC6015",
+    "series": "其他系列",
+    "color": "特闪白珍",
+    "size": "40-300",
+    "mesh": "80"
+  },
+  {
+    "model": "HC611",
+    "ouke": "HC611",
+    "series": "其他系列",
+    "color": "金红纯白",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC6035",
+    "ouke": "HC6035",
+    "series": "其他系列",
+    "color": "幻红",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC6010",
+    "ouke": "HC6010",
+    "series": "其他系列",
+    "color": "锻银",
+    "size": "<15",
+    "mesh": "1000"
+  },
+  {
+    "model": "HC6011",
+    "ouke": "HC6011",
+    "series": "其他系列",
+    "color": "白珍珠",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC6012",
+    "ouke": "HC6012",
+    "series": "其他系列",
+    "color": "闪白珍珠",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "HC6065",
+    "ouke": "HC6065",
+    "series": "其他系列",
+    "color": "幻绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC6055",
+    "ouke": "HC6055",
+    "series": "其他系列",
+    "color": "幻蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC6701",
+    "ouke": "HC6701",
+    "series": "其他系列",
+    "color": "青铜",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "HC6702",
+    "ouke": "HC6702",
+    "series": "其他系列",
+    "color": "水晶铜",
+    "size": "10-30",
+    "mesh": "700"
+  },
+  {
+    "model": "HC6703",
+    "ouke": "HC6703",
+    "series": "其他系列",
+    "color": "闪铜",
+    "size": "10-100",
+    "mesh": "200"
+  },
+  {
+    "model": "L223B",
+    "ouke": "L223B",
+    "series": "其他系列",
+    "color": "缎蓝",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L233A",
+    "ouke": "L233A",
+    "series": "其他系列",
+    "color": "缎绿",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L216A",
+    "ouke": "L216A",
+    "series": "其他系列",
+    "color": "干涉紫铜",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L220A",
+    "ouke": "L220A",
+    "series": "其他系列",
+    "color": "缎紫",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L331",
+    "ouke": "L331",
+    "series": "其他系列",
+    "color": "金属金色",
+    "size": "5-25",
+    "mesh": "800"
+  },
+  {
+    "model": "L313",
+    "ouke": "L313",
+    "series": "其他系列",
+    "color": "皇室金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L370",
+    "ouke": "L370",
+    "series": "其他系列",
+    "color": "绿口青金",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L-375",
+    "ouke": "L-375",
+    "series": "其他系列",
+    "color": "亮丽红太阳金",
+    "size": "10-70",
+    "mesh": "325"
+  },
+  {
+    "model": "L710",
+    "ouke": "L710",
+    "series": "其他系列",
+    "color": "深棕",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L711",
+    "ouke": "L711",
+    "series": "其他系列",
+    "color": "宝马棕",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7627",
+    "ouke": "L7627",
+    "series": "其他系列",
+    "color": "深干涉蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L725",
+    "ouke": "L725",
+    "series": "其他系列",
+    "color": "幻彩蓝",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7438",
+    "ouke": "L7438",
+    "series": "其他系列",
+    "color": "墨绿",
+    "size": "10-60",
+    "mesh": "400"
+  },
+  {
+    "model": "L7625",
+    "ouke": "L7625",
+    "series": "其他系列",
+    "color": "深干涉红",
+    "size": "10-60",
+    "mesh": "400"
+  }
+];
+const SL=[...new Set(DB.map(d=>d.series))].sort();
+const COLORS=[...new Set(DB.map(d=>d.color))];
+const MODELS=[...new Set(DB.map(d=>d.model))];
+const OUKES=[...new Set(DB.map(d=>d.ouke))];
+
+/* ── State ── */
+let hist=JSON.parse(localStorage.getItem('xl2_h')||'{}');
+let ss=JSON.parse(localStorage.getItem('xl2_ss')||'{}');
+let errBank=JSON.parse(localStorage.getItem('xl2_err')||'{}');
+let streak=0,bestS=0,wrongList=[];
+let qPool=[],qIdx=0,qAns=0,qOk=0,curQ=null,qActive=false;
+let fPool=[],fIdx=0,fAns=0,fOk=0,curF=null,fActive=false;
+let sPool=[],sIdx=0,sMarks={};
+let bSort='model',bAsc=true;
+function saveLS(){localStorage.setItem('xl2_h',JSON.stringify(hist));localStorage.setItem('xl2_ss',JSON.stringify(ss));localStorage.setItem('xl2_err',JSON.stringify(errBank));}
+
+/* ── Init ── */
+(function(){
+  SL.forEach(s=>{
+    ['qsf','fsf','ssf','bsf'].forEach(id=>{
+      const o=document.createElement('option');o.value=s;o.textContent=s;
+      document.getElementById(id).appendChild(o);
+    });
+  });
+  renderB(); initS(); upHd();
+})();
+
+/* ── Tabs ── */
+function sw(name,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ctrl').forEach(c=>c.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
+  document.getElementById('ctrl-'+name).classList.add('on');
+  btn.classList.add('on');
+  if(name==='browse') renderB();
+  if(name==='stats') renderST();
+  if(name==='study') initS();
+}
+
+/* ══════ QUIZ (选择题) ══════ */
+function getQPool(){
+  const sf=document.getElementById('qsf').value;
+  const useErr=document.getElementById('qerr').checked;
+  if(useErr){
+    const errModels=Object.keys(errBank).filter(k=>errBank[k]>0);
+    if(!errModels.length){toast('错题库为空！先答题产生错误记录','er');return[];}
+    return shuffle(DB.filter(d=>errModels.includes(d.model)));
+  }
+  let p=DB.slice();
+  if(sf!=='all') p=p.filter(d=>d.series===sf);
+  return p;
+}
+
+function startQ(){
+  const pool=getQPool(); if(!pool.length) return;
+  qPool=shuffle([...pool]); qIdx=0;qAns=0;qOk=0;streak=0;wrongList=[];qActive=true;
+  showQ();
+}
+function resetQ(){
+  qActive=false;qIdx=0;qAns=0;qOk=0;streak=0;
+  const pool=getQPool();
+  document.getElementById('qmain').innerHTML=`<div style="text-align:center;padding:50px 16px;color:var(--tx3)"><div style="font-size:32px;margin-bottom:10px">🎯</div><div>点击「开始」<br>${pool.length} 个型号等你来练</div></div>`;
+  document.getElementById('qpf').style.width='0%';
+  document.getElementById('qnum').textContent='题目 0/0';
+  document.getElementById('qsm').textContent='';
+}
+
+function showQ(){
+  if(qIdx>=qPool.length){showQScore();return;}
+  const d=qPool[qIdx];
+  let tp=document.getElementById('qtp').value;
+  if(tp==='mix') tp=['color','ouke','series','model'][~~(Math.random()*4)];
+  curQ=buildQ(d,tp);
+  document.getElementById('qpf').style.width=(qIdx/qPool.length*100)+'%';
+  document.getElementById('qnum').textContent=`题目 ${qIdx+1}/${qPool.length}`;
+  document.getElementById('qsm').textContent=qAns?`✓${qOk} ✗${qAns-qOk} 🔥${streak}`:'';
+  document.getElementById('qmain').innerHTML=renderQ(curQ);
+}
+
+function buildQ(d,tp){
+  if(tp==='color'){
+    const w=shuffle(COLORS.filter(c=>c!==d.color)).slice(0,3);
+    return{d,tp,q:`型号 <b style="color:var(--bl);font-size:20px">${d.model}</b> 的颜色是？`,
+      opts:shuffle([d.color,...w]),ans:d.color,badge:'型号→颜色'};
+  }
+  if(tp==='ouke'){
+    const pool=DB.filter(x=>x.ouke!==d.ouke);
+    const w=shuffle(pool).slice(0,3).map(x=>x.ouke);
+    return{d,tp,q:`轩琅型号 <b style="color:var(--bl);font-size:20px">${d.model}</b> 对应的欧克型号是？`,
+      opts:shuffle([d.ouke,...w]),ans:d.ouke,badge:'型号→欧克'};
+  }
+  if(tp==='series'){
+    const w=shuffle(SL.filter(s=>s!==d.series)).slice(0,3);
+    return{d,tp,q:`型号 <b style="color:var(--bl);font-size:20px">${d.model}</b> 属于哪个系列？`,
+      opts:shuffle([d.series,...w]),ans:d.series,badge:'型号→系列'};
+  }
+  // model
+  const ss2=DB.filter(x=>x.series===d.series&&x.model!==d.model);
+  const w=[...shuffle(ss2).slice(0,2),...shuffle(DB.filter(x=>x.model!==d.model)).slice(0,2)].slice(0,3).map(x=>x.model);
+  return{d,tp,q:`<b style="color:var(--gr)">${d.series}</b> 中颜色为 <b style="color:var(--or)">${d.color}</b> 的轩琅型号是？`,
+    opts:shuffle([d.model,...w]),ans:d.model,badge:'颜色→型号'};
+}
+
+function renderQ(q){
+  return`<div class="qc">
+    <div class="qbdg">${q.badge}</div>
+    <div class="qqt">${q.q}</div>
+    <div style="font-size:11px;color:var(--tx3);margin-bottom:14px">粒径:${q.d.size} | 目数:${q.d.mesh||'-'}</div>
+    <div class="opts" id="opts">${q.opts.map(o=>`<button class="opt" onclick="selQ(this,'${o.replace(/'/g,"\'")}')">${o}</button>`).join('')}</div>
+  </div>
+  <div id="qres"></div>
+  <div class="qnav">
+    <button class="btn bs bsm" onclick="skipQ()">跳过</button>
+    <div style="font-size:11px;color:var(--tx3)">点击选项</div>
+    <button class="btn bs bsm" onclick="nextQ()" id="nxtq" disabled>下一题 →</button>
+  </div>`;
+}
+
+function selQ(btn,val){
+  if(!qActive) return;
+  document.querySelectorAll('.opt').forEach(o=>o.disabled=true);
+  qAns++;
+  const ok=val===curQ.ans;
+  if(ok){qOk++;streak++;bestS=Math.max(bestS,streak);btn.classList.add('ok');btn.innerHTML+=`<span class="om">✅</span>`;}
+  else{
+    streak=0;btn.classList.add('ng');btn.innerHTML+=`<span class="om">❌</span>`;
+    document.querySelectorAll('.opt').forEach(o=>{if(o.textContent===curQ.ans)o.classList.add('sa');});
+    wrongList.push({...curQ.d,myAns:val});
+    // Add to error bank
+    errBank[curQ.d.model]=(errBank[curQ.d.model]||0)+1;
+  }
+  // Record
+  const k=curQ.d.model;
+  if(!hist[k])hist[k]={r:0,w:0};
+  hist[k][ok?'r':'w']++;
+  const sr=curQ.d.series;
+  if(!ss[sr])ss[sr]={r:0,w:0};
+  ss[sr][ok?'r':'w']++;
+  saveLS();
+  document.getElementById('qres').innerHTML=`<div class="rb ${ok?'ok':'ng'}">
+    <div class="ri">${ok?'🎉':'😅'}</div>
+    <div class="rt">${ok?`<b>正确！</b>连续 ${streak} 题`:`<b>答错了。</b>正确：<b style="color:var(--gr)">${curQ.ans}</b>`}
+      <div class="rd2">${curQ.d.model} · 欧克:${curQ.d.ouke} · ${curQ.d.series} · ${curQ.d.color}</div>
+    </div></div>`;
+  document.getElementById('nxtq').disabled=false;
+  upHd();
+}
+function nextQ(){qIdx++;showQ();}
+function skipQ(){qPool.push(qPool.splice(qIdx,1)[0]);showQ();}
+
+function showQScore(){
+  qActive=false;
+  const pct=qAns?Math.round(qOk/qAns*100):0;
+  const deg=pct*3.6;
+  const emoji=pct>=90?'🏆':pct>=70?'👏':pct>=50?'😊':'💪';
+  let whtml='';
+  if(wrongList.length){
+    whtml=`<div style="margin-top:16px;text-align:left">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--rd)">❌ 答错 ${wrongList.length} 个（已加入错题库）</div>
+      <div class="wl">${wrongList.map(w=>`<div class="wi"><div class="wm">${w.model}</div><div class="wd">欧克:${w.ouke} | 系列:${w.series} | 颜色:<b style="color:var(--gr)">${w.color}</b></div></div>`).join('')}</div>
+    </div>`;
+  }
+  document.getElementById('qmain').innerHTML=`<div class="sc-wrap">
+    <div class="sc-circle" style="background:conic-gradient(var(--gr) ${deg}deg, var(--bd) 0deg)">
+      <div class="sc-inner"><div class="sc-pct">${pct}%</div><div class="sc-lbl">正确率</div></div>
+    </div>
+    <div style="font-size:18px;font-weight:700;margin-bottom:6px">${emoji} 本轮完成！</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:20px">答对 ${qOk}/${qAns} · 最佳连击 ${bestS} 🔥</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button class="btn bp" onclick="startQ()">🔄 再来一轮</button>
+      <button class="btn ba bsm" onclick="()=>{document.getElementById('qerr').checked=true;startQ()}">📝 练错题库</button>
+      <button class="btn bs bsm" onclick="resetQ()">返回</button>
+    </div>${whtml}
+  </div>`;
+}
+
+/* ══════ FILL (填空题) ══════ */
+function getFPool(){
+  const sf=document.getElementById('fsf').value;
+  const useErr=document.getElementById('ferr').checked;
+  if(useErr){
+    const em=Object.keys(errBank).filter(k=>errBank[k]>0);
+    if(!em.length){toast('错题库为空！','er');return[];}
+    return shuffle(DB.filter(d=>em.includes(d.model)));
+  }
+  let p=DB.slice();
+  if(sf!=='all') p=p.filter(d=>d.series===sf);
+  return p;
+}
+function startF(){
+  const pool=getFPool(); if(!pool.length) return;
+  fPool=shuffle([...pool]);fIdx=0;fAns=0;fOk=0;streak=0;wrongList=[];fActive=true;
+  showF();
+}
+function resetF(){
+  fActive=false;fIdx=0;fAns=0;fOk=0;
+  const pool=getFPool();
+  document.getElementById('fmain').innerHTML=`<div style="text-align:center;padding:50px 16px;color:var(--tx3)"><div style="font-size:32px;margin-bottom:10px">✏️</div><div>点击「开始」<br>${pool.length} 个型号等你填写</div></div>`;
+  document.getElementById('fpf').style.width='0%';
+  document.getElementById('fnum').textContent='题目 0/0';
+  document.getElementById('fsm').textContent='';
+}
+function showF(){
+  if(fIdx>=fPool.length){showFScore();return;}
+  const d=fPool[fIdx];
+  const tp=document.getElementById('ftp').value;
+  curF={d,tp};
+  let question='',inputLabel='',hint='';
+  if(tp==='color'){
+    question=`型号 <b style="color:var(--bl);font-size:20px">${d.model}</b>`;
+    inputLabel='请输入颜色名称';
+    hint=`粒径:${d.size} | 系列:${d.series}`;
+  } else if(tp==='ouke'){
+    question=`轩琅型号 <b style="color:var(--bl);font-size:20px">${d.model}</b>`;
+    inputLabel='请输入对应的欧克型号';
+    hint=`颜色:${d.color} | 系列:${d.series}`;
+  } else {
+    question=`欧克型号 <b style="color:var(--or);font-size:20px">${d.ouke}</b>`;
+    inputLabel='请输入对应的轩琅型号';
+    hint=`颜色:${d.color} | 系列:${d.series}`;
+  }
+  document.getElementById('fpf').style.width=(fIdx/fPool.length*100)+'%';
+  document.getElementById('fnum').textContent=`题目 ${fIdx+1}/${fPool.length}`;
+  document.getElementById('fsm').textContent=fAns?`✓${fOk} ✗${fAns-fOk} 🔥${streak}`:'';
+  document.getElementById('fmain').innerHTML=`<div class="qc">
+    <div class="qbdg">填空题</div>
+    <div class="qqt">${question}<br><span style="font-size:11px;color:var(--tx3)">${hint}</span></div>
+    <div class="fb-wrap">
+      <input class="fb-input" id="finput" placeholder="${inputLabel}" autocomplete="off" spellcheck="false"
+        onkeydown="if(event.key==='Enter')submitF()">
+      <div class="fb-hint">按 Enter 提交</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:2px">
+      <button class="btn bp" onclick="submitF()">✓ 提交</button>
+      <button class="btn bs bsm" onclick="showFHint()">💡 提示</button>
+      <button class="btn bs bsm" onclick="skipF()">跳过</button>
+    </div>
+  </div>
+  <div id="fres"></div>
+  <div class="qnav" style="margin-top:14px">
+    <div></div>
+    <button class="btn bs bsm" onclick="nextF()" id="nxtf" disabled style="margin-left:auto">下一题 →</button>
+  </div>`;
+  setTimeout(()=>document.getElementById('finput')?.focus(),50);
+}
+function showFHint(){
+  const d=curF.d,tp=curF.tp;
+  const ans=tp==='color'?d.color:tp==='ouke'?d.ouke:d.model;
+  const hint=ans.length>2?ans[0]+'_'.repeat(ans.length-2)+ans[ans.length-1]:ans[0]+'_';
+  document.querySelector('.fb-hint').textContent=`提示：${hint}`;
+}
+function submitF(){
+  const inp=document.getElementById('finput');
+  if(!inp) return;
+  const val=inp.value.trim();
+  if(!val) return;
+  const d=curF.d,tp=curF.tp;
+  const ans=tp==='color'?d.color:tp==='ouke'?d.ouke:d.model;
+  fAns++;
+  const ok=val===ans;
+  inp.disabled=true;
+  inp.classList.add(ok?'ok':'ng');
+  if(ok){fOk++;streak++;bestS=Math.max(bestS,streak);}
+  else{
+    streak=0;wrongList.push({...d,myAns:val});
+    errBank[d.model]=(errBank[d.model]||0)+1;
+  }
+  const k=d.model;
+  if(!hist[k])hist[k]={r:0,w:0};
+  hist[k][ok?'r':'w']++;
+  const sr=d.series;
+  if(!ss[sr])ss[sr]={r:0,w:0};
+  ss[sr][ok?'r':'w']++;
+  saveLS();
+  document.getElementById('fres').innerHTML=`<div class="rb ${ok?'ok':'ng'}">
+    <div class="ri">${ok?'🎉':'😅'}</div>
+    <div class="rt">${ok?`<b>正确！</b>`:`<b>答错了。</b>正确答案：<b style="color:var(--gr)">${ans}</b>`}
+      <div class="rd2">${d.model} | 欧克:${d.ouke} | ${d.series} | ${d.color}</div>
+    </div></div>`;
+  document.getElementById('nxtf').disabled=false;
+  upHd();
+}
+function nextF(){fIdx++;showF();}
+function skipF(){fPool.push(fPool.splice(fIdx,1)[0]);showF();}
+function showFScore(){
+  fActive=false;
+  const pct=fAns?Math.round(fOk/fAns*100):0;
+  const emoji=pct>=90?'🏆':pct>=70?'👏':pct>=50?'😊':'💪';
+  document.getElementById('fmain').innerHTML=`<div class="sc-wrap">
+    <div style="font-size:40px;margin-bottom:14px">${emoji}</div>
+    <div style="font-size:18px;font-weight:700;margin-bottom:6px">填空完成！</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:20px">正确率 ${pct}% · 答对 ${fOk}/${fAns}</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button class="btn bp" onclick="startF()">🔄 再来一轮</button>
+      <button class="btn bs bsm" onclick="resetF()">返回</button>
+    </div>
+    ${wrongList.length?`<div class="wl" style="margin-top:16px;text-align:left">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--rd)">❌ 答错 ${wrongList.length} 个</div>
+      ${wrongList.map(w=>`<div class="wi"><div class="wm">${w.model}</div><div class="wd">欧克:${w.ouke} | ${w.series} | 颜色:<b style="color:var(--gr)">${w.color}</b> | 你答：<span style="color:var(--rd)">${w.myAns}</span></div></div>`).join('')}
+    </div>`:''}
+  </div>`;
+}
+
+/* ══════ STUDY (记忆卡片) ══════ */
+function initS(){
+  const sf=document.getElementById('ssf').value;
+  let p=DB.slice();if(sf!=='all')p=p.filter(d=>d.series===sf);
+  sPool=p;sIdx=0;sMarks={};renderS();renderDots();
+}
+function renderS(){
+  const d=sPool[sIdx]; if(!d) return;
+  const show=document.getElementById('sshow').value;
+  document.getElementById('fc').classList.remove('fl');
+  document.getElementById('fcm').textContent=d.model;
+  document.getElementById('fcs').textContent=d.series;
+  document.getElementById('fcq').textContent='点击翻转查看答案';
+  let ans=d.color, sub=`欧克:${d.ouke} | 粒径:${d.size}`;
+  if(show==='ouke'){ans=d.ouke;sub=`颜色:${d.color}`;}
+  else if(show==='both'){ans=d.color;sub=`欧克:${d.ouke} | 粒径:${d.size}`;}
+  document.getElementById('fca').textContent=ans;
+  document.getElementById('fcb').textContent=sub;
+  const ok=Object.values(sMarks).filter(v=>v).length;
+  document.getElementById('sinfo').innerHTML=`<span>${sIdx+1}/${sPool.length}</span><span style="color:var(--gr)">✅${ok}</span><span style="color:var(--rd)">❌${Object.values(sMarks).filter(v=>!v).length}</span>`;
+  document.getElementById('sprog').textContent=`已掌握 ${ok}/${sPool.length} (${sPool.length?Math.round(ok/sPool.length*100):0}%)`;
+  renderDots();
+}
+function flipC(){document.getElementById('fc').classList.toggle('fl');}
+function sGo(d){
+  sIdx=Math.max(0,Math.min(sPool.length-1,sIdx+d));renderS();
+  if(d===-1&&sIdx===0||d===1&&sIdx===sPool.length-1) toast(d<0?'已是第一张':'已是最后一张','ok');
+}
+function markS(ok){sMarks[sPool[sIdx].model]=ok;sGo(1);}
+function renderDots(){
+  const el=document.getElementById('sdots');
+  const max=Math.min(sPool.length,100);
+  el.innerHTML=sPool.slice(0,max).map((d,i)=>{
+    const m=sMarks[d.model];
+    return`<div class="dot ${i===sIdx?'cur':m===true?'ok':m===false?'ng':''}" onclick="sIdx=${i};renderS()" title="${d.model}"></div>`;
+  }).join('')+(sPool.length>max?`<span style="font-size:10px;color:var(--tx3)">+${sPool.length-max}</span>`:'');
+}
+
+/* ══════ BROWSE (型号速查) ══════ */
+function renderB(){
+  const q=(document.getElementById('bq').value||'').toLowerCase();
+  const sf=document.getElementById('bsf').value;
+  let data=DB.filter(d=>
+    (sf==='all'||d.series===sf)&&
+    (!q||d.model.toLowerCase().includes(q)||d.ouke.toLowerCase().includes(q)||d.color.includes(q)||d.series.includes(q))
+  );
+  data.sort((a,b)=>{const va=a[bSort]||'',vb=b[bSort]||'';return bAsc?(va>vb?1:-1):(va<vb?1:-1);});
+  document.getElementById('bcnt').textContent=`显示 ${data.length} / ${DB.length} 个型号`;
+  document.getElementById('btbody').innerHTML=data.map(d=>{
+    const h=hist[d.model]||{r:0,w:0};
+    const hasErr=errBank[d.model]>0;
+    return`<tr>
+      <td class="cm">${d.model}${hasErr?` <span style="font-size:10px;color:var(--rd)">✗${errBank[d.model]}</span>`:''}</td>
+      <td class="co">${d.ouke}</td>
+      <td class="ck">${d.series}</td>
+      <td class="cc">${d.color}</td>
+      <td style="color:var(--tx2)">${d.size}</td>
+      <td style="color:var(--tx2)">${d.mesh||'-'}</td>
+      <td style="font-size:11px;color:var(--tx3)">${h.r+h.w?`✓${h.r}✗${h.w}`:''}</td>
+    </tr>`;
+  }).join('');
+}
+function sortB(col){if(bSort===col)bAsc=!bAsc;else{bSort=col;bAsc=true;}renderB();}
+function exportCSV(){
+  const rows=[['轩琅型号','欧克型号','系列','颜色','粒径范围','目数','错误次数']];
+  DB.forEach(d=>rows.push([d.model,d.ouke,d.series,d.color,d.size,d.mesh,errBank[d.model]||0]));
+  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='轩琅型号表.csv';a.click();toast('CSV已导出','ok');
+}
+function exportErrors(){
+  const em=Object.keys(errBank).filter(k=>errBank[k]>0);
+  if(!em.length){toast('错题库为空','er');return;}
+  const rows=[['轩琅型号','欧克型号','系列','颜色','错误次数']];
+  em.sort((a,b)=>errBank[b]-errBank[a]).forEach(m=>{
+    const d=DB.find(x=>x.model===m);
+    if(d)rows.push([d.model,d.ouke,d.series,d.color,errBank[m]]);
+  });
+  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='错题库.csv';a.click();toast('错题已导出','ok');
+}
+
+/* ══════ STATS (我的记录) ══════ */
+function renderST(){
+  const r=Object.values(hist).reduce((s,h)=>s+h.r,0);
+  const w=Object.values(hist).reduce((s,h)=>s+h.w,0);
+  const pct=r+w?Math.round(r/(r+w)*100):0;
+  const errTotal=Object.keys(errBank).filter(k=>errBank[k]>0).length;
+  const sl=Object.entries(ss).map(([s,v])=>({s,r:v.r,w:v.w,pct:v.r+v.w?Math.round(v.r/(v.r+v.w)*100):0})).sort((a,b)=>a.pct-b.pct);
+  const hard=Object.entries(hist).filter(([,h])=>h.w>0).sort((a,b)=>b[1].w-a[1].w).slice(0,12);
+  document.getElementById('stcont').innerHTML=`
+    <div class="sg">
+      <div class="sc2"><div class="sn">${r+w}</div><div class="sl2">总答题</div></div>
+      <div class="sc2"><div class="sn" style="color:var(--gr)">${pct}%</div><div class="sl2">正确率</div></div>
+      <div class="sc2"><div class="sn" style="color:var(--am)">${Object.keys(hist).length}</div><div class="sl2">练过型号</div></div>
+      <div class="sc2"><div class="sn" style="color:var(--rd)">${errTotal}</div><div class="sl2">错题库数量</div></div>
+    </div>
+    ${sl.length?`<div style="margin-bottom:18px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px">📊 各系列正确率</div>
+      ${sl.map(x=>`<div style="margin-bottom:7px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--tx2);margin-bottom:3px">
+          <span>${x.s}</span><span>✓${x.r} ✗${x.w} → ${x.pct}%</span></div>
+        <div style="height:5px;background:var(--bd);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${x.pct}%;background:${x.pct>=80?'var(--gr)':x.pct>=50?'var(--am)':'var(--rd)'};border-radius:3px"></div>
+        </div></div>`).join('')}
+    </div>`:''}
+    ${hard.length?`<div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--rd)">🔴 最难记的 ${hard.length} 个型号</div>
+      <div class="wl">${hard.map(([m,h])=>{const d=DB.find(x=>x.model===m)||{};return`<div class="wi">
+        <div class="wm">${m} <span style="font-size:11px;font-weight:400;color:var(--am)">错${h.w}次</span></div>
+        <div class="wd">欧克:${d.ouke||'?'} | ${d.series||''} | 颜色:<b style="color:var(--gr)">${d.color||''}</b></div>
+      </div>`;}).join('')}</div>
+    </div>`:'<div style="text-align:center;padding:40px;color:var(--tx3)">还没有答题记录，快去练习吧！</div>'}`;
+}
+
+/* ══════ Utils ══════ */
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function upHd(){
+  const r=Object.values(hist).reduce((s,h)=>s+h.r,0);
+  const t=Object.values(hist).reduce((s,h)=>s+h.r+h.w,0);
+  const ec=Object.keys(errBank).filter(k=>errBank[k]>0).length;
+  document.getElementById('hd1').textContent=t?Math.round(r/t*100)+'%':'-';
+  document.getElementById('hd2').textContent=streak;
+  document.getElementById('hd3').textContent=ec;
+}
+let _tt;
+function toast(msg,type='ok'){
+  const el=document.getElementById('toast');el.textContent=msg;el.className='show '+type;
+  clearTimeout(_tt);_tt=setTimeout(()=>el.className='',2500);
+}
+</script>
+</body>
+</html>
