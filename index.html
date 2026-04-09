@@ -159,11 +159,19 @@ hr{border:none;border-top:1px solid var(--bd);margin:12px 0}
 <div class="ctrl on" id="ctrl-quiz">
   <select id="qsf" onchange="resetQ()"><option value="all">全部系列</option></select>
   <select id="qtp" onchange="resetQ()">
-    <option value="color">型号→颜色</option>
-    <option value="ouke">型号→欧克型号</option>
-    <option value="series">型号→系列</option>
-    <option value="model">颜色→轩琅型号</option>
-    <option value="mix">随机混合</option>
+    <option value="color">轩琅型号 → 颜色</option>
+    <option value="ouke">轩琅型号 → 欧克型号</option>
+    <option value="series">轩琅型号 → 系列</option>
+    <option value="model">颜色 → 轩琅型号</option>
+    <option disabled>──── 以欧克型号为题 ────</option>
+    <option value="ok_color">欧克型号 → 颜色</option>
+    <option value="ok_xl">欧克型号 → 轩琅型号</option>
+    <option value="ok_series">欧克型号 → 系列</option>
+    <option value="xl_ok">颜色 → 欧克型号</option>
+    <option disabled>──── 综合 ────</option>
+    <option value="mix_xl">随机混合（轩琅为主）</option>
+    <option value="mix_ok">随机混合（欧克为主）</option>
+    <option value="mix">随机全混（双向）</option>
   </select>
   <label style="font-size:12px;color:var(--tx2);display:flex;align-items:center;gap:4px">
     <input type="checkbox" id="qerr" style="cursor:pointer"> 只练错题库
@@ -176,9 +184,16 @@ hr{border:none;border-top:1px solid var(--bd);margin:12px 0}
 <div class="ctrl" id="ctrl-fill">
   <select id="fsf" onchange="resetF()"><option value="all">全部系列</option></select>
   <select id="ftp">
-    <option value="color">型号→填写颜色</option>
-    <option value="ouke">型号→填写欧克型号</option>
-    <option value="model">欧克型号→填写轩琅型号</option>
+    <option value="color">轩琅型号 → 填写颜色</option>
+    <option value="ouke">轩琅型号 → 填写欧克型号</option>
+    <option value="series">轩琅型号 → 填写系列</option>
+    <option disabled>──── 以欧克型号为题 ────</option>
+    <option value="ok_color">欧克型号 → 填写颜色</option>
+    <option value="ok_xl">欧克型号 → 填写轩琅型号</option>
+    <option value="ok_series">欧克型号 → 填写系列</option>
+    <option disabled>──── 综合 ────</option>
+    <option value="model">颜色 → 填写轩琅型号</option>
+    <option value="xl_ok">颜色 → 填写欧克型号</option>
   </select>
   <label style="font-size:12px;color:var(--tx2);display:flex;align-items:center;gap:4px">
     <input type="checkbox" id="ferr" style="cursor:pointer"> 只练错题库
@@ -190,13 +205,21 @@ hr{border:none;border-top:1px solid var(--bd);margin:12px 0}
 <!-- 记忆卡片控制栏 -->
 <div class="ctrl" id="ctrl-study">
   <select id="ssf" onchange="initS()"><option value="all">全部系列</option></select>
-  <select id="sshow">
-    <option value="color">背面:颜色</option>
-    <option value="ouke">背面:欧克型号</option>
-    <option value="both">背面:颜色+欧克</option>
+  <select id="sfront" onchange="renderS()">
+    <option value="xl">正面：轩琅型号</option>
+    <option value="ok">正面：欧克型号</option>
+    <option value="both_f">正面：轩琅 + 欧克</option>
+    <option value="color_f">正面：颜色</option>
+  </select>
+  <select id="sshow" onchange="renderS()">
+    <option value="both">背面：颜色 + 两种型号</option>
+    <option value="color">背面：颜色</option>
+    <option value="xl_b">背面：轩琅型号</option>
+    <option value="ouke">背面：欧克型号</option>
+    <option value="series">背面：系列</option>
   </select>
   <button class="btn bp" onclick="initS()">🔄 重新开始</button>
-  <button class="btn bs bsm" onclick="()=>{sPool=shuffle([...sPool]);sIdx=0;renderS()}">🔀 打乱</button>
+  <button class="btn bs bsm" onclick="doShuffle()">🔀 打乱</button>
 </div>
 
 <!-- 型号速查控制栏 -->
@@ -210,6 +233,9 @@ hr{border:none;border-top:1px solid var(--bd);margin:12px 0}
 <div class="ctrl" id="ctrl-stats">
   <button class="btn br bsm" onclick="if(confirm('确定清空全部记录？')){hist={};ss={};errBank={};saveLS();renderST();upHd();toast('记录已清空','ok')}">🗑 清空记录</button>
   <button class="btn ba bsm" onclick="exportErrors()">⬇ 导出错题</button>
+  <button class="btn bv" onclick="startErrTrain('choice')">🎯 错题选择题强化</button>
+  <button class="btn bp" onclick="startErrTrain('fill')">✏️ 错题填空强化</button>
+  <button class="btn bs bsm" onclick="startErrTrain('card')">🃏 错题卡片复习</button>
 </div>
 
 <!-- ① 选择题 -->
@@ -254,9 +280,9 @@ hr{border:none;border-top:1px solid var(--bd);margin:12px 0}
           <div style="font-size:11px;color:var(--pu);margin-top:6px" id="fcs"></div>
         </div>
         <div class="cface cbk">
-          <div class="cq">答案</div>
-          <div class="cans" id="fca">-</div>
-          <div class="csub" id="fcb"></div>
+          <div class="cq" style="font-size:11px;color:var(--tx3)">翻转答案</div>
+          <div class="cans" id="fca" style="font-size:22px;word-break:break-all;text-align:center">-</div>
+          <div class="csub" id="fcb" style="font-size:11px;color:var(--tx2);margin-top:8px;text-align:center;line-height:1.6"></div>
         </div>
       </div>
     </div>
@@ -295,6 +321,20 @@ hr{border:none;border-top:1px solid var(--bd);margin:12px 0}
 <!-- ⑤ 我的记录 -->
 <div id="pg-stats" class="pg">
   <div id="stcont"></div>
+</div>
+
+<!-- ⑥ 错题强化训练（内嵌在页面中，动态切换） -->
+<div id="pg-errtrain" class="pg" style="display:none">
+  <div class="qw">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <button class="btn bs bsm" onclick="exitErrTrain()">← 返回记录</button>
+      <span id="et-title" style="font-size:14px;font-weight:600;color:var(--pu)"></span>
+      <span id="et-badge" style="font-size:11px;color:var(--tx3)"></span>
+    </div>
+    <div class="qm"><span id="et-num"></span><span id="et-sm" style="color:var(--gr)"></span></div>
+    <div class="qpb"><div class="qpf" id="et-pf" style="width:0%"></div></div>
+    <div id="et-main"></div>
+  </div>
 </div>
 
 <script>
@@ -5442,8 +5482,8 @@ function selQ(btn,val){
   saveLS();
   document.getElementById('qres').innerHTML=`<div class="rb ${ok?'ok':'ng'}">
     <div class="ri">${ok?'🎉':'😅'}</div>
-    <div class="rt">${ok?`<b>正确！</b>连续 ${streak} 题`:`<b>答错了。</b>正确：<b style="color:var(--gr)">${curQ.ans}</b>`}
-      <div class="rd2">${curQ.d.model} · 欧克:${curQ.d.ouke} · ${curQ.d.series} · ${curQ.d.color}</div>
+    <div class="rt">${ok?`<b>正确！🔥 连续 ${streak} 题`:`<b>答错了。</b>正确答案：<b style="color:var(--gr)">${curQ.ans}</b>`}
+      <div class="rd2">轩琅：<b style="color:var(--bl)">${curQ.d.model}</b> ｜ 欧克：<b style="color:var(--or)">${curQ.d.ouke}</b> ｜ ${curQ.d.series} ｜ 颜色：${curQ.d.color}</div>
     </div></div>`;
   document.getElementById('nxtq').disabled=false;
   upHd();
@@ -5508,19 +5548,40 @@ function showF(){
   const d=fPool[fIdx];
   const tp=document.getElementById('ftp').value;
   curF={d,tp};
-  let question='',inputLabel='',hint='';
+  let question='',inputLabel='',hint='',ans_f='';
   if(tp==='color'){
-    question=`型号 <b style="color:var(--bl);font-size:20px">${d.model}</b>`;
-    inputLabel='请输入颜色名称';
-    hint=`粒径:${d.size} | 系列:${d.series}`;
+    question=`轩琅型号 <b style="color:var(--bl);font-size:20px">${d.model}</b>`;
+    inputLabel='请输入颜色名称'; ans_f=d.color;
+    hint=`欧克:${d.ouke} | 系列:${d.series}`;
   } else if(tp==='ouke'){
     question=`轩琅型号 <b style="color:var(--bl);font-size:20px">${d.model}</b>`;
-    inputLabel='请输入对应的欧克型号';
+    inputLabel='请输入对应的欧克型号'; ans_f=d.ouke;
     hint=`颜色:${d.color} | 系列:${d.series}`;
-  } else {
+  } else if(tp==='series'){
+    question=`轩琅型号 <b style="color:var(--bl);font-size:20px">${d.model}</b>`;
+    inputLabel='请输入所属系列'; ans_f=d.series;
+    hint=`颜色:${d.color} | 欧克:${d.ouke}`;
+  } else if(tp==='ok_color'){
     question=`欧克型号 <b style="color:var(--or);font-size:20px">${d.ouke}</b>`;
-    inputLabel='请输入对应的轩琅型号';
+    inputLabel='请输入颜色名称'; ans_f=d.color;
+    hint=`轩琅:${d.model} | 系列:${d.series}`;
+  } else if(tp==='ok_xl'){
+    question=`欧克型号 <b style="color:var(--or);font-size:20px">${d.ouke}</b>`;
+    inputLabel='请输入对应的轩琅型号'; ans_f=d.model;
     hint=`颜色:${d.color} | 系列:${d.series}`;
+  } else if(tp==='ok_series'){
+    question=`欧克型号 <b style="color:var(--or);font-size:20px">${d.ouke}</b>`;
+    inputLabel='请输入所属系列'; ans_f=d.series;
+    hint=`轩琅:${d.model} | 颜色:${d.color}`;
+  } else if(tp==='xl_ok'){
+    question=`<b style="color:var(--gr)">${d.series}</b> 颜色为 <b style="color:var(--am)">${d.color}</b>`;
+    inputLabel='请输入欧克型号'; ans_f=d.ouke;
+    hint=`轩琅:${d.model} | 系列:${d.series}`;
+  } else {
+    // tp==='model' 颜色→轩琅
+    question=`<b style="color:var(--gr)">${d.series}</b> 颜色为 <b style="color:var(--am)">${d.color}</b>`;
+    inputLabel='请输入轩琅型号'; ans_f=d.model;
+    hint=`欧克:${d.ouke} | 系列:${d.series}`;
   }
   document.getElementById('fpf').style.width=(fIdx/fPool.length*100)+'%';
   document.getElementById('fnum').textContent=`题目 ${fIdx+1}/${fPool.length}`;
@@ -5548,7 +5609,8 @@ function showF(){
 }
 function showFHint(){
   const d=curF.d,tp=curF.tp;
-  const ans=tp==='color'?d.color:tp==='ouke'?d.ouke:d.model;
+  const tpMap={color:d.color,ouke:d.ouke,series:d.series,model:d.model,ok_color:d.color,ok_xl:d.model,ok_series:d.series,xl_ok:d.ouke};
+  const ans=tpMap[tp]!==undefined?tpMap[tp]:d.model;
   const hint=ans.length>2?ans[0]+'_'.repeat(ans.length-2)+ans[ans.length-1]:ans[0]+'_';
   document.querySelector('.fb-hint').textContent=`提示：${hint}`;
 }
@@ -5558,7 +5620,8 @@ function submitF(){
   const val=inp.value.trim();
   if(!val) return;
   const d=curF.d,tp=curF.tp;
-  const ans=tp==='color'?d.color:tp==='ouke'?d.ouke:d.model;
+  const tpMap={color:d.color,ouke:d.ouke,series:d.series,model:d.model,ok_color:d.color,ok_xl:d.model,ok_series:d.series,xl_ok:d.ouke};
+  const ans=tpMap[tp]!==undefined?tpMap[tp]:d.model;
   fAns++;
   const ok=val===ans;
   inp.disabled=true;
@@ -5577,8 +5640,8 @@ function submitF(){
   saveLS();
   document.getElementById('fres').innerHTML=`<div class="rb ${ok?'ok':'ng'}">
     <div class="ri">${ok?'🎉':'😅'}</div>
-    <div class="rt">${ok?`<b>正确！</b>`:`<b>答错了。</b>正确答案：<b style="color:var(--gr)">${ans}</b>`}
-      <div class="rd2">${d.model} | 欧克:${d.ouke} | ${d.series} | ${d.color}</div>
+    <div class="rt">${ok?`<b>正确！🔥</b>`:`<b>答错了。</b>正确答案：<b style="color:var(--gr)">${ans}</b>`}
+      <div class="rd2">轩琅：<b style="color:var(--bl)">${d.model}</b> ｜ 欧克：<b style="color:var(--or)">${d.ouke}</b> ｜ ${d.series} ｜ 颜色：${d.color}</div>
     </div></div>`;
   document.getElementById('nxtf').disabled=false;
   upHd();
@@ -5612,14 +5675,52 @@ function initS(){
 }
 function renderS(){
   const d=sPool[sIdx]; if(!d) return;
+  const front=document.getElementById('sfront')?document.getElementById('sfront').value:'xl';
   const show=document.getElementById('sshow').value;
   document.getElementById('fc').classList.remove('fl');
-  document.getElementById('fcm').textContent=d.model;
-  document.getElementById('fcs').textContent=d.series;
-  document.getElementById('fcq').textContent='点击翻转查看答案';
-  let ans=d.color, sub=`欧克:${d.ouke} | 粒径:${d.size}`;
-  if(show==='ouke'){ans=d.ouke;sub=`颜色:${d.color}`;}
-  else if(show==='both'){ans=d.color;sub=`欧克:${d.ouke} | 粒径:${d.size}`;}
+  // -- 正面内容 --
+  let frontMain='', frontSub='', frontHint='点击翻转查看答案';
+  if(front==='ok'){
+    frontMain=d.ouke;
+    frontSub=d.series;
+    frontHint='欧克型号 · 点击翻转';
+  } else if(front==='both_f'){
+    frontMain=d.model;
+    frontSub=`欧克：${d.ouke}`;
+    frontHint='轩琅 & 欧克 · 点击翻转';
+  } else if(front==='color_f'){
+    frontMain=d.color;
+    frontSub=d.series;
+    frontHint='颜色 · 点击翻转查看型号';
+  } else {
+    frontMain=d.model;
+    frontSub=d.series;
+    frontHint='轩琅型号 · 点击翻转';
+  }
+  document.getElementById('fcm').textContent=frontMain;
+  document.getElementById('fcs').textContent=frontSub;
+  document.getElementById('fcq').textContent=frontHint;
+  // -- 背面内容 --
+  let ans='', sub='';
+  if(show==='both'){
+    ans=d.color;
+    sub=`轩琅：${d.model}  |  欧克：${d.ouke}  |  粒径：${d.size}`;
+  } else if(show==='color'){
+    ans=d.color;
+    sub=`${d.series} | 粒径:${d.size}`;
+  } else if(show==='xl_b'){
+    ans=d.model;
+    sub=`欧克：${d.ouke} | 颜色：${d.color}`;
+  } else if(show==='ouke'){
+    ans=d.ouke;
+    sub=`颜色：${d.color} | 轩琅：${d.model}`;
+  } else if(show==='series'){
+    ans=d.series;
+    sub=`颜色：${d.color} | 粒径：${d.size}`;
+  } else {
+    ans=d.color;
+    sub=`轩琅：${d.model}  |  欧克：${d.ouke}`;
+  }
   document.getElementById('fca').textContent=ans;
   document.getElementById('fcb').textContent=sub;
   const ok=Object.values(sMarks).filter(v=>v).length;
@@ -5719,6 +5820,228 @@ function renderST(){
       </div>`;}).join('')}</div>
     </div>`:'<div style="text-align:center;padding:40px;color:var(--tx3)">还没有答题记录，快去练习吧！</div>'}`;
 }
+
+/* ══════ Error Train (错题强化训练) ══════ */
+let etPool=[],etIdx=0,etAns=0,etOk=0,etMode='choice',etWrong=[];
+
+function startErrTrain(mode){
+  const em=Object.keys(errBank).filter(k=>errBank[k]>0);
+  if(!em.length){toast('错题库为空！先做题产生错误记录','er');return;}
+  etPool=shuffle(DB.filter(d=>em.includes(d.model)));
+  // Sort by error count descending (most errors first)
+  etPool.sort((a,b)=>(errBank[b.model]||0)-(errBank[a.model]||0));
+  etIdx=0;etAns=0;etOk=0;etMode=mode;etWrong=[];
+
+  // Show error train page
+  document.querySelectorAll('.pg').forEach(p=>{p.style.display='none';p.classList.remove('on');});
+  document.querySelectorAll('.ctrl').forEach(c2=>{c2.classList.remove('on');});
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  const ep=document.getElementById('pg-errtrain');
+  ep.classList.add('on');ep.style.display='block';
+
+  const modeNames={choice:'选择题强化',fill:'填空题强化',card:'卡片复习'};
+  document.getElementById('et-title').textContent='🔴 错题强化：'+modeNames[mode];
+  document.getElementById('et-badge').textContent=`共 ${etPool.length} 个错题`;
+
+  if(mode==='card') showEtCard(); else showEt();
+}
+
+function exitErrTrain(){
+  document.getElementById('pg-errtrain').classList.remove('on');
+  document.getElementById('pg-errtrain').style.display='none';
+  document.querySelectorAll('.tab').forEach((b,i)=>{if(i===4)b.classList.add('on');});
+  document.getElementById('pg-stats').classList.add('on');
+  document.getElementById('ctrl-stats').classList.add('on');
+  renderST();
+}
+
+function showEt(){
+  if(etIdx>=etPool.length){showEtScore();return;}
+  const d=etPool[etIdx];
+  const errCnt=errBank[d.model]||0;
+  // Alternate between color and ouke questions based on mode
+  const isChoice=(etMode==='choice');
+  document.getElementById('et-pf').style.width=(etIdx/etPool.length*100)+'%';
+  document.getElementById('et-num').textContent=`强化 ${etIdx+1}/${etPool.length}`;
+  document.getElementById('et-sm').textContent=etAns?`✓${etOk} ✗${etAns-etOk}`:'';
+
+  if(isChoice){
+    // Build 4-option multiple choice: 50% color→model, 50% model→color
+    const qType=(etIdx%2===0)?'color':'ouke';
+    let question,opts,ans,badge;
+    if(qType==='color'){
+      const w=shuffle(COLORS.filter(c=>c!==d.color)).slice(0,3);
+      opts=shuffle([d.color,...w]);ans=d.color;
+      question=`型号 <b style="color:var(--bl);font-size:20px">${d.model}</b> 的颜色是？`;
+      badge='型号→颜色';
+    } else {
+      const pool2=DB.filter(x=>x.ouke!==d.ouke);
+      const w=shuffle(pool2).slice(0,3).map(x=>x.ouke);
+      opts=shuffle([d.ouke,...w]);ans=d.ouke;
+      question=`轩琅型号 <b style="color:var(--bl);font-size:20px">${d.model}</b> 的欧克型号是？`;
+      badge='型号→欧克';
+    }
+    document.getElementById('et-main').innerHTML=`
+      <div class="qc" style="border-color:rgba(248,81,73,.3)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span class="qbdg" style="background:rgba(248,81,73,.15);color:var(--rd)">${badge}</span>
+          <span style="font-size:11px;color:var(--rd)">历史错误 ${errCnt} 次</span>
+        </div>
+        <div class="qqt">${question}</div>
+        <div style="font-size:11px;color:var(--tx3);margin-bottom:14px">系列:${d.series} | 粒径:${d.size}</div>
+        <div class="opts" id="et-opts">${opts.map(o=>`<button class="opt" onclick="selEt(this,'${o.replace(/'/g,"\'")}','${ans.replace(/'/g,"\'")}','${d.model.replace(/'/g,"\'")}','${d.color.replace(/'/g,"\'")}','${d.ouke.replace(/'/g,"\'")}','${d.series.replace(/'/g,"\'")}')"> ${o}</button>`).join('')}</div>
+      </div>
+      <div id="et-res"></div>
+      <div class="qnav"><div></div><button class="btn bs bsm" onclick="nextEt()" id="et-nxt" disabled>下一题 →</button></div>`;
+  } else {
+    // Fill blank mode
+    const qType=(etIdx%3);
+    let question,ans,ph,hint;
+    if(qType===0){question=`型号 <b style="color:var(--bl);font-size:20px">${d.model}</b>`;ans=d.color;ph='输入颜色名称';hint=`欧克:${d.ouke} | 系列:${d.series}`;}
+    else if(qType===1){question=`轩琅型号 <b style="color:var(--bl);font-size:20px">${d.model}</b>`;ans=d.ouke;ph='输入对应欧克型号';hint=`颜色:${d.color} | 系列:${d.series}`;}
+    else{question=`欧克型号 <b style="color:var(--or);font-size:20px">${d.ouke}</b>`;ans=d.model;ph='输入对应轩琅型号';hint=`颜色:${d.color} | 系列:${d.series}`;}
+    document.getElementById('et-main').innerHTML=`
+      <div class="qc" style="border-color:rgba(248,81,73,.3)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span class="qbdg" style="background:rgba(188,140,255,.15);color:var(--pu)">填空强化</span>
+          <span style="font-size:11px;color:var(--rd)">历史错误 ${errCnt} 次</span>
+        </div>
+        <div class="qqt">${question}<br><span style="font-size:11px;color:var(--tx3)">${hint}</span></div>
+        <div class="fb-wrap">
+          <input class="fb-input" id="et-inp" placeholder="${ph}" autocomplete="off" spellcheck="false"
+            onkeydown="if(event.key==='Enter')submitEt('${ans.replace(/'/g,"\'")}','${d.model.replace(/'/g,"\'")}','${d.color.replace(/'/g,"\'")}','${d.ouke.replace(/'/g,"\'")}','${d.series.replace(/'/g,"\'")}')">
+          <div class="fb-hint">按 Enter 提交</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn bp bsm" onclick="submitEt('${ans.replace(/'/g,"\'")}','${d.model.replace(/'/g,"\'")}','${d.color.replace(/'/g,"\'")}','${d.ouke.replace(/'/g,"\'")}','${d.series.replace(/'/g,"\'")}')">✓ 提交</button>
+          <button class="btn bs bsm" onclick="()=>{const a='${ans}';const h=a.length>2?a[0]+'_'.repeat(a.length-2)+a[a.length-1]:a[0]+'_';document.querySelector('.fb-hint').textContent='提示：'+h}">💡 提示</button>
+        </div>
+      </div>
+      <div id="et-res"></div>
+      <div class="qnav"><div></div><button class="btn bs bsm" onclick="nextEt()" id="et-nxt" disabled>下一题 →</button></div>`;
+    setTimeout(()=>document.getElementById('et-inp')?.focus(),50);
+  }
+}
+
+function selEt(btn,val,ans,model,color,ouke,series){
+  document.querySelectorAll('#et-opts .opt').forEach(o=>o.disabled=true);
+  etAns++;
+  const ok=val===ans;
+  if(ok){etOk++;btn.classList.add('ok');btn.innerHTML+=`<span class="om">✅</span>`;}
+  else{btn.classList.add('ng');btn.innerHTML+=`<span class="om">❌</span>`;
+    document.querySelectorAll('#et-opts .opt').forEach(o=>{if(o.textContent.trim()===ans)o.classList.add('sa');});
+    etWrong.push({model,color,ouke,series,myAns:val});
+    // Each wrong answer adds to errBank again
+    errBank[model]=(errBank[model]||0)+1;saveLS();
+  }
+  // Reduce error count on correct answer
+  if(ok && errBank[model]>0){errBank[model]--;if(errBank[model]===0)delete errBank[model];saveLS();}
+  const k=model;if(!hist[k])hist[k]={r:0,w:0};hist[k][ok?'r':'w']++;saveLS();upHd();
+  document.getElementById('et-res').innerHTML=`<div class="rb ${ok?'ok':'ng'}">
+    <div class="ri">${ok?'🎉':'😅'}</div>
+    <div class="rt">${ok?'<b>正确！错误次数-1</b>':`<b>答错了。</b>正确：<b style="color:var(--gr)">${ans}</b>`}
+      <div class="rd2">${model} | 欧克:${ouke} | ${series} | 颜色:<b style="color:var(--gr)">${color}</b></div>
+    </div></div>`;
+  document.getElementById('et-nxt').disabled=false;
+}
+
+function submitEt(ans,model,color,ouke,series){
+  const inp=document.getElementById('et-inp');
+  if(!inp||inp.disabled) return;
+  const val=inp.value.trim();if(!val) return;
+  inp.disabled=true;etAns++;
+  const ok=val===ans;
+  inp.classList.add(ok?'ok':'ng');
+  if(ok){etOk++;if(errBank[model]>0){errBank[model]--;if(errBank[model]===0)delete errBank[model];saveLS();}}
+  else{etWrong.push({model,color,ouke,series,myAns:val});errBank[model]=(errBank[model]||0)+1;saveLS();}
+  const k=model;if(!hist[k])hist[k]={r:0,w:0};hist[k][ok?'r':'w']++;saveLS();upHd();
+  document.getElementById('et-res').innerHTML=`<div class="rb ${ok?'ok':'ng'}">
+    <div class="ri">${ok?'🎉':'😅'}</div>
+    <div class="rt">${ok?'<b>正确！错误次数-1</b>':`<b>答错了。</b>正确：<b style="color:var(--gr)">${ans}</b>`}
+      <div class="rd2">${model} | 欧克:${ouke} | ${series} | 颜色:<b style="color:var(--gr)">${color}</b></div>
+    </div></div>`;
+  document.getElementById('et-nxt').disabled=false;
+}
+
+function nextEt(){etIdx++;showEt();}
+
+/* Error card mode */
+let etCardIdx=0,etCardMarks={};
+function showEtCard(){
+  etCardIdx=0;etCardMarks={};
+  renderEtCard();
+}
+function renderEtCard(){
+  const d=etPool[etCardIdx];
+  if(!d){showEtScore();return;}
+  const errCnt=errBank[d.model]||0;
+  document.getElementById('et-pf').style.width=(etCardIdx/etPool.length*100)+'%';
+  document.getElementById('et-num').textContent=`卡片 ${etCardIdx+1}/${etPool.length}`;
+  document.getElementById('et-sm').textContent=`✅${Object.values(etCardMarks).filter(v=>v).length} ❌${Object.values(etCardMarks).filter(v=>!v).length}`;
+  document.getElementById('et-main').innerHTML=`
+    <div class="cf" id="etc" onclick="document.getElementById('etc').classList.toggle('fl')">
+      <div class="ci">
+        <div class="cface" style="border-color:rgba(248,81,73,.4)">
+          <div class="cq">点击翻转 · 历史错误 ${errCnt} 次</div>
+          <div class="cmod">${d.model}</div>
+          <div style="font-size:11px;color:var(--pu);margin-top:5px">${d.series}</div>
+        </div>
+        <div class="cface cbk">
+          <div class="cq">答案</div>
+          <div class="cans">${d.color}</div>
+          <div class="csub">欧克：${d.ouke} | 粒径：${d.size}</div>
+        </div>
+      </div>
+    </div>
+    <div class="sdots">${etPool.slice(0,Math.min(etPool.length,80)).map((x,i)=>{
+      const m=etCardMarks[x.model];
+      return `<div class="dot ${i===etCardIdx?'cur':m===true?'ok':m===false?'ng':''}" title="${x.model}"></div>`;
+    }).join('')}${etPool.length>80?`<span style="font-size:10px;color:var(--tx3)">+${etPool.length-80}</span>`:''}</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button class="btn bs bsm" onclick="etCardIdx=Math.max(0,etCardIdx-1);renderEtCard()">← 上一张</button>
+      <button class="btn br bsm" onclick="markEtCard(false)">❌ 没记住</button>
+      <button class="btn bg bsm" onclick="markEtCard(true)">✅ 记住了</button>
+      <button class="btn bs bsm" onclick="etCardIdx=Math.min(etPool.length-1,etCardIdx+1);renderEtCard()">下一张 →</button>
+    </div>
+    <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:10px">
+      已掌握 ${Object.values(etCardMarks).filter(v=>v).length}/${etPool.length}
+    </div>`;
+}
+function markEtCard(ok){
+  const d=etPool[etCardIdx];
+  etCardMarks[d.model]=ok;
+  if(ok && errBank[d.model]>0){errBank[d.model]--;if(errBank[d.model]===0)delete errBank[d.model];saveLS();}
+  etCardIdx=Math.min(etPool.length-1,etCardIdx+1);
+  if(etCardIdx>=etPool.length-1 && ok) showEtScore();
+  else renderEtCard();
+  upHd();
+}
+
+function showEtScore(){
+  const isCard=(etMode==='card');
+  const total=etPool.length;
+  const pct=isCard?Math.round(Object.values(etCardMarks).filter(v=>v).length/total*100):etAns?Math.round(etOk/etAns*100):0;
+  const remaining=Object.keys(errBank).filter(k=>errBank[k]>0).length;
+  document.getElementById('et-main').innerHTML=`<div class="sc-wrap">
+    <div class="sc-circle" style="background:conic-gradient(var(--pu) ${pct*3.6}deg, var(--bd) 0deg)">
+      <div class="sc-inner"><div class="sc-pct">${pct}%</div><div class="sc-lbl">${isCard?'掌握率':'正确率'}</div></div>
+    </div>
+    <div style="font-size:18px;font-weight:700;margin-bottom:6px">🔴 错题强化完成！</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:8px">${isCard?`掌握 ${Object.values(etCardMarks).filter(v=>v).length}/${total}`:`答对 ${etOk}/${etAns}`}</div>
+    <div style="font-size:12px;color:var(--rd);margin-bottom:20px">剩余错题：${remaining} 个${remaining?'，继续强化！':'，全部清零了！🎉'}</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button class="btn bv" onclick="startErrTrain(etMode)">🔄 再练一次</button>
+      <button class="btn bp" onclick="startErrTrain(etMode==='choice'?'fill':etMode==='fill'?'card':'choice')">🔀 换个方式</button>
+      <button class="btn bs bsm" onclick="exitErrTrain()">← 返回记录</button>
+    </div>
+    ${etWrong.length?`<div class="wl" style="margin-top:14px;text-align:left">
+      <div style="font-size:12px;font-weight:600;color:var(--rd);margin-bottom:6px">本轮还需加强 (${etWrong.length} 个)</div>
+      ${etWrong.map(w=>`<div class="wi"><div class="wm">${w.model}</div><div class="wd">欧克:${w.ouke} | ${w.series} | 颜色:<b style="color:var(--gr)">${w.color}</b></div></div>`).join('')}
+    </div>`:''}
+  </div>`;
+}
+
+function doShuffle(){sPool=shuffle([...sPool]);sIdx=0;sMarks={};renderS();renderDots();toast('已随机打乱顺序','ok');}
 
 /* ══════ Utils ══════ */
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
